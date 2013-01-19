@@ -9,6 +9,95 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
+
+#wrapper {
+  height: 10000px;
+}
+
+
+/* TOP NAV BAR */
+#head-nav{
+  background-color: #FFFFFF;
+  text-align:right;
+  font-size:11px;
+  color:#161616;
+  width: 100%;
+  height:35px;
+  position:fixed;
+  top:0px;
+  vertical-align:top;
+  display:block;
+  z-index: 100000;
+}
+
+#app-title {
+  position: relative;
+  text-align: center;
+}
+
+/* CHAT BOX */
+#chat-box {
+  background-color: black;
+  width: 400px;
+  height: 500px;
+  position: absolute;
+}
+
+#chat-log {
+  background-color: yellow;
+  width: 400px;
+  height: 300px;
+  overflow-y: auto;
+  position: absolute;
+}
+
+#message-send-box {
+  position:absolute;
+  top: 300px;
+
+}
+
+
+#message-text-box {
+  background-color: white;
+  width: 400px;
+  max-width:  400px;
+  position: relative;
+}
+
+/*#message-text-box {
+  background-color: white;
+  width: 400px;
+  max-width:  400px;
+  height: 100px;
+  position: relative;
+}*/
+
+#message-send-button {
+
+  position:relative;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #container{
   background-color: rgba(255,10,255, 1);
   font-family: "Open Sans", sans-serif;
@@ -62,22 +151,6 @@ body {
 
 
 
-#wrapper {
-  height: 10000px;
-}
-
-#head-nav{
-  background-color: #FFFFFF;
-  text-align:right;
-  font-size:11px;
-  color:#161616;
-  width: 100%;
-  height:35px;
-  position:fixed;
-  top:0px;
-  vertical-align:top;
-  display:block;
-}
 
 
 

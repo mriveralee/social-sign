@@ -20,14 +20,10 @@ var server = http.createServer(app);
 });
 
  var io = require('socket.io').listen(server);
-
 //app.listen(SERVER_PORT, function() {
 //	console.log("\n**************\n* SERVER RUNNING ON PORT: " + SERVER_PORT + " *\n**************\n");
 //});
 //console.log(process.env.port);
-
-
-
 
 //Request for making HTTP(S) requests
 var request = require('request');
@@ -41,10 +37,7 @@ var async = require('async');
 var mongoose = require('mongoose'),
 	connect = require('connect'),
 	MongoStore = require('connect-mongodb');
-//mongoose.connect('mongodb://nodejitsu:9c28b994d494429442ba453dd21f1faf@alex.mongohq.com:10059/nodejitsudb763664407039');
-//var db = mongoose.createConnection('mongodb://nodejitsu:9c28b994d494429442ba453dd21f1faf@alex.mongohq.com:10059/nodejitsudb763664407039');
-
-var my_db = 'mongodb://nodejitsu:9c28b994d494429442ba453dd21f1faf@alex.mongohq.com:10059/nodejitsudb763664407039';
+var my_db = 'mongodb://nodejitsu_socialsign:1f4qmdssgdm4dnhscproqqkc8b@ds043927.mongolab.com:43927/nodejitsu_socialsign_nodejitsudb8876918957';
 //Local Debugging
 //var my_db = 'mongodb://localhost/test';
 var db = mongoose.connect(my_db);
@@ -108,12 +101,13 @@ var gestureSchema = new mongoose.Schema({
 //Stores a bunch of chat message for a room
 var chatLogSchema = new mongoose.Schema({
 	'room_id': String,
-	'message' : Array
+	'chat_log' : Array
 });
 
 //Stores a single message
 var chatMsgSchema = new mongoose.Schema({
 	'username': String,
+	'date_created': String,
 	'message' : String
 });
 
@@ -166,6 +160,49 @@ app.get('/', function(req, res) {
 		user : req.user
 	});
 });
+
+
+
+//Room Version 
+app.get('/room/:room_id', function(req, res) {
+	var roomID = req.param('room_id') ? req.param('room_id') : "r" + parseInt(Math.round(Math.random()*103843));
+	
+	var whereParams = {room_id: roomID};
+	var data = {
+		'room_id': roomID,
+	};
+
+	chatLogModel.update(whereParams, data, {upsert: true}, function(err, room){
+			if (err) {
+				throw err;
+				console.log("Could not upsert user");
+			}
+			else {
+				if (room.chat_log) {
+					console.log(room);
+				}
+				console.log("Chat Log in DB");
+			}
+		});
+	console.log(roomID);
+	//Get previous chat logs and render them in the file 
+	res.render('index', {
+		RENDERVARS: { 
+			room_id: roomID
+		}
+	});
+
+
+
+
+
+});
+
+
+
+
+
+
 
 
 app.get('/login', function(req, res) {
@@ -272,8 +309,8 @@ io.sockets.on('connection', function (socket) {
   socket.emit("user entered room");
 
 
-  socket.on('chat message', function (data) {
-    data.create_date = Math.floor(new Date().getTime() / 1000);
+  socket.on('chat-message', function (data) {
+    
     data.room = "blah";
     io.sockets.emit('chat message', data);
     console.log(data);
@@ -283,11 +320,53 @@ io.sockets.on('connection', function (socket) {
   });
 
 
-//CLIENT BUTTON TEST
- socket.on('button-test-client', function (data) {
+//CHAT SOCKET
+var emitChatMessageToClients = function(data) {
+	io.sockets.emit('chat-message-received', data);
+	console.log("EMITTED");
+}
+
+
+ socket.on('chat-message-sent', function (data) {
+ 	data.create_date = Math.floor(new Date().getTime() / 1000);
  	console.log("BUTTON-CLICKED ON CLIENT: ");
  	console.log(data);
+ 	emitChatMessageToClients(data);
+
+ 	var whereParams = {
+ 		'room_id': data.room_id
+ 	};
+
+	chatLogModel.findOne(whereParams, function(err, room) {
+		if (err) {
+			console.log(err);
+		}
+
+		if (!room){
+			return;
+		}
+
+		var messageArray = [data];
+
+		room.chat_log = room.chat_log.concat(messageArray);
+		room.save(function(err) {
+	    	if (err){
+	        	console.log('error saving chat');
+		    } 
+		    else {
+		        console.log('saved chat');
+			}
+		});
+
+
+	});
+
+
+
+
+
  });
+
 
 
 });

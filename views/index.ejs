@@ -2,37 +2,15 @@
 <html>
 <head>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-  <script type="text/javascript" src="js/jquery.scrollTo-1.4.3.1-min.js"></script>
-    <script src="js/functions.js"></script>
-    <script src="socket.io/socket.io.js"></script>
-  <script>
 
-  //var io = require('socket.io-client'),
-    var socket = io.connect(window.location.hostname);
-    ///Input from server
-    socket.on("news", function (data) {
-      console.log(data);
-      socket.emit("my other event", { my: "data" });
-    });
-
-
-    $(document).ready(function() {
-
-      $("#button-test").click(function() {
-        socket.emit("button-test-client", {BUTTON_TEST: "WOO!"});
-      });
-      // Handler for .ready() called.
-    });
-
-  </script>
-
-
-
+  <script type="text/javascript" src="../js/jquery.scrollTo-1.4.3.1-min.js"></script>
+  <script src="../socket.io/socket.io.js"></script>
+  <script src="../js/functions.js"></script>
 
   <link href="http://fonts.googleapis.com/css?family=Open+Sans|Bowlby+One+SC|Sigmar+One" rel="stylesheet" type="text/css">
-  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
-  <link rel="icon" href="images/favicon.png" type="image/png">
 
+  <link href="../stylesheets/style.css" rel="stylesheet" type="text/css">
+  <link rel="icon" href="../images/favicon.png" type="image/png">
 </head>
 <body>
    
@@ -44,16 +22,33 @@
             </div>
 
         </div>
-         <div style="text-align:center" >
-            <br><br>
-          <% if (!user) { %>
-          <h2>Finger Me, Please Press my button!</h2>
-          <br> 
-          <input id="button-test" type="button" value="Socket Test">
-          </input>
-          <% } else { %>
-          <h2>s</h2>
-          <% } %>
+         <div id="app-title" >
+          <br><br>
+          <h2>Finger Me!</h2>
+         </div>
+          
+
+          <br><br>
+          <div id='chat-box'>
+
+            <div id='chat-log'> 
+              USER 1: HI <br> <br>USER 2: NICE <br>
+            </div>
+
+            <div id="message-send-box">
+              <input type='textbox' id="message-text-box"></input>
+               <!--textarea id="message-text-box"></input-->
+
+              <input id="message-send-button" value="Send" type="button"></input>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+         
         </div>
     </div>
 

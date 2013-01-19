@@ -1,18 +1,26 @@
 {
   "name": "finger-me",
   "description": "Pennapps Spring 2013 App",
-  "version": "0.0.1",
+  "version": "0.0.1-4",
   "author:": "Michael Rivera",
-  "private": true,
+  "private": false,
   "dependencies": {
     "express": "3.0.0",
-    "socket.io": "0.9.6",
+    "socket.io": "*",
     "socket.io-client": "*",
     "require": "*",
     "ejs": ">= 0.0.0",
     "connect": "*",
     "connect-mongodb": "*",
     "mongoose": "*",
-    "request": "*"
+    "request": "*",
+    "async": "0.1.x"
+  },
+  "subdomain": "socialsign.finger-me",
+  "scripts": {
+    "start": "app.js"
+  },
+  "engines": {
+    "node": "0.8.x"
   }
 }
