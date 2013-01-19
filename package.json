@@ -8,6 +8,7 @@
     "express": "3.x",
     "socket.io": "*",
     "socket.io-client": "*",
+    "require": "*",
     "ejs": ">= 0.0.0",
     "connect": "*",
     "connect-mongodb": "*",

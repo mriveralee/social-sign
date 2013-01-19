@@ -229,7 +229,7 @@ var socketApp = require('http').createServer(express())
 
 
 //Config
-server.listen(80);
+server.listen(81);
 io.set("log level", 0);
 
 io.sockets.on('connection', function (socket) {
