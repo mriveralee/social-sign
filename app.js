@@ -77,7 +77,6 @@ var gestureSchema = new mongoose.Schema({
 	'data' : String
 });
 
-var
 
 
 
