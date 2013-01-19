@@ -31,7 +31,6 @@ var db = mongoose.connect(my_db);
 
 
 ///// App Configurations
-//var app = express.createServer();   //Deprecated
 var app = express();
 
 app.configure(function() {
@@ -71,6 +70,16 @@ app.configure('development', function() {
 });
 
 /********** MONGO SCHEMA ******************/
+
+
+var gestureSchema = new mongoose.Schema({
+	'name' : String,
+	'data' : String
+});
+
+var
+
+
 
 var userSchema = new mongoose.Schema({
 	'id' : String,
@@ -130,11 +139,6 @@ app.get('/logout', function(req, res) {
 	res.redirect('/');
 });
 
-app.post('/loginWithEmail', function(req, res) {
-	//Store email in our session
-	req.session.userName = req.body.email;
-	res.redirect('/auth/tumblr');
-});
 
 //Route for confirming a user in the db
 
