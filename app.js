@@ -2,10 +2,32 @@
  * Module dependencies.
  */
 
-var express = require('express');
+var express = require('express')
+	, http = require('http');
 var routes = require('./routes');
-var http = require('http');
-var SERVER_PORT = 3000;
+
+//Port Number set up
+process.env.NODE_ENV = 'development';
+process.env.port = 8000;
+var SERVER_PORT = 8000;
+
+
+
+var app = express();
+var server = http.createServer(app);
+	server.listen(SERVER_PORT, function() {
+	console.log("\n**************\n* SERVER RUNNING ON PORT: " + SERVER_PORT + " *\n**************\n");
+});
+
+ var io = require('socket.io').listen(server);
+
+//app.listen(SERVER_PORT, function() {
+//	console.log("\n**************\n* SERVER RUNNING ON PORT: " + SERVER_PORT + " *\n**************\n");
+//});
+//console.log(process.env.port);
+
+
+
 
 //Request for making HTTP(S) requests
 var request = require('request');
@@ -32,13 +54,6 @@ var db = mongoose.connect(my_db);
 
 
 ///// App Configurations
-var app = express();
-
-var server = app.listen(SERVER_PORT, function() {
-	console.log("\n**************\n* SERVER RUNNING ON PORT: " + SERVER_PORT + " *\n**************\n");
-});
-  var io = require('socket.io').listen(server);
-
 
 app.configure(function() {
 	app.set('port', process.env.port || 3000); //3000
@@ -64,6 +79,8 @@ app.configure(function() {
 	app.use(express.errorHandler());
 	app.use(app.router);
 	app.use(express.static(__dirname + '/public'));
+
+	app.use(express.static('/', __dirname + '/.../public'));
 });
 //
 app.configure('development', function() {
@@ -224,20 +241,17 @@ app.get('/confirm/:email/:key', function(req, res) {
 
 
 //////////////// Socket IO //////////////////////////
-
-// var app = require('express')()
-//   , server = require('http').createServer(app)
-//   , io = require('socket.io').listen(server);
-
-// server.listen(80);
-//var server = require('http').createServer(app)
-// ,
-
-
-
-//Config
-//server.listen(80);
 io.set("log level", 0);
+
+
+// Heroku won't actually allow us to use WebSockets
+// so we have to setup polling instead.
+// https://devcenter.heroku.com/articles/using-socket-io-with-node-js-on-heroku
+io.configure(function () {
+  io.set("transports", ["xhr-polling"]);
+  io.set("polling duration", 10);
+});
+
 
 io.sockets.on('connection', function (socket) {
 //  db.all("SELECT * FROM messages", function(e, r) {
@@ -267,6 +281,15 @@ io.sockets.on('connection', function (socket) {
     // record the chat message at some point
     // db.run("INSERT INTO messages (create_date, user, room, message) values (?, ?, ?, ?)", data.create_date, data.user, data.room, data.message);
   });
+
+
+//CLIENT BUTTON TEST
+ socket.on('button-test-client', function (data) {
+ 	console.log("BUTTON-CLICKED ON CLIENT: ");
+ 	console.log(data);
+ });
+
+
 });
 /////////////////////////////////////////////////////
 

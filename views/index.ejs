@@ -4,18 +4,26 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script type="text/javascript" src="js/jquery.scrollTo-1.4.3.1-min.js"></script>
     <script src="js/functions.js"></script>
-
-    <!--script src="js/socket.io/require.js"></script-->
-    <!--script src="js/socket.io/socket.io.js"></script-->
-    <script src="js/socket.io/socket.io.js"></script>
+    <script src="socket.io/socket.io.js"></script>
   <script>
 
   //var io = require('socket.io-client'),
-    var socket = io.connect('http://localhost:8000');
-    socket.on('news', function (data) {
+    var socket = io.connect(window.location.hostname);
+    ///Input from server
+    socket.on("news", function (data) {
       console.log(data);
-      socket.emit('my other event', { my: 'data' });
+      socket.emit("my other event", { my: "data" });
     });
+
+
+    $(document).ready(function() {
+
+      $("#button-test").click(function() {
+        socket.emit("button-test-client", {BUTTON_TEST: "WOO!"});
+      });
+      // Handler for .ready() called.
+    });
+
   </script>
 
 
@@ -39,7 +47,10 @@
          <div style="text-align:center" >
             <br><br>
           <% if (!user) { %>
-          <h2>Finger Me, Please! <a href="/#">log in</a>.</h2>
+          <h2>Finger Me, Please Press my button!</h2>
+          <br> 
+          <input id="button-test" type="button" value="Socket Test">
+          </input>
           <% } else { %>
           <h2>s</h2>
           <% } %>
