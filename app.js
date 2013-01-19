@@ -5,10 +5,11 @@
 var express = require('express');
 var routes = require('./routes');
 var http = require('http');
-var SERVER_PORT = 8000;
+var SERVER_PORT = 3000;
 
 //Request for making HTTP(S) requests
 var request = require('request');
+
 
 //Serial Function Calls
 var async = require('async');
@@ -33,8 +34,14 @@ var db = mongoose.connect(my_db);
 ///// App Configurations
 var app = express();
 
+var server = app.listen(SERVER_PORT, function() {
+	console.log("\n**************\n* SERVER RUNNING ON PORT: " + SERVER_PORT + " *\n**************\n");
+});
+  var io = require('socket.io').listen(server);
+
+
 app.configure(function() {
-	app.set('port', process.env.port || 3000);
+	app.set('port', process.env.port || 3000); //3000
 	app.set('views', __dirname + '/views');
 	
 	//Template Enginer
@@ -223,13 +230,13 @@ app.get('/confirm/:email/:key', function(req, res) {
 //   , io = require('socket.io').listen(server);
 
 // server.listen(80);
-var socketApp = require('http').createServer(express())
-  , server = require('http').createServer(app)
-  , io = require('socket.io').listen(server);
+//var server = require('http').createServer(app)
+// ,
+
 
 
 //Config
-server.listen(81);
+//server.listen(80);
 io.set("log level", 0);
 
 io.sockets.on('connection', function (socket) {
@@ -273,11 +280,10 @@ io.sockets.on('connection', function (socket) {
 
 
 
-////////////// LISTENING AT PORT //////////////////////////
-app.listen(SERVER_PORT, function() {
-	console.log("\n********************************\n* SERVER RUNNING ON PORT: " + SERVER_PORT + " *\n********************************\n");
-});
+
 
 
 //===== PUBLIC =================================================================
 module.exports.database = db;
+module.exports.io = io;
+module.exports.server = app;
