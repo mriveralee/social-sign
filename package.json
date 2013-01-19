@@ -11,6 +11,6 @@
     "connect": "*",
     "connect-mongodb": "*",
     "mongoose": "*",
-
+    "request": "*"
   }
 }
