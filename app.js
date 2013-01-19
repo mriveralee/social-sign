@@ -69,13 +69,29 @@ app.configure('development', function() {
 
 /********** MONGO SCHEMA ******************/
 
-
+//Gesture data (contains user-defined and standard schema)
+var gestureDataSchema = new mongoose.Schema({
+	'std': Array,
+	'user_defined': Array
+});
+//A single gesture object
 var gestureSchema = new mongoose.Schema({
 	'name' : String,
 	'data' : String
 });
 
 
+//Stores a bunch of chat message for a room
+var chatLogSchema = new mongoose.Schema({
+	'room_id': String,
+	'message' : Array
+});
+
+//Stores a single message
+var chatMsgSchema = new mongoose.Schema({
+	'username': String,
+	'message' : String
+});
 
 
 var userSchema = new mongoose.Schema({
@@ -90,6 +106,15 @@ var userSchema = new mongoose.Schema({
 	'timestamp_last_tagged' : Number
 });
 
+
+
+var chatMsgModel = db.model('Chat_Msg', chatMsgSchema);
+var chatLogModel = db.model('Chat_Log', chatLogSchema);
+var gestureDataModel = db.model('Gesture_Data', gestureDataSchema);
+var gestureModel = db.model('Gesture', gestureSchema);
+
+
+
 userSchema.methods.setEmail = function(email) {
 	this.email = email;
 }
@@ -102,7 +127,6 @@ userSchema.methods.setConfirmed = function(isConfirmed) {
 userSchema.methods.setTimestampLastTagged = function(runTimestamp) {
 	this.timestamp_last_tagged = runTimestamp;
 }
-
 
 var UserModel = db.model('User', userSchema);
 
@@ -192,7 +216,52 @@ app.get('/confirm/:email/:key', function(req, res) {
 
 
 
-//////////////// Socket IO 
+//////////////// Socket IO //////////////////////////
+
+// var app = require('express')()
+//   , server = require('http').createServer(app)
+//   , io = require('socket.io').listen(server);
+
+// server.listen(80);
+var socketApp = require('http').createServer(express())
+  , server = require('http').createServer(app)
+  , io = require('socket.io').listen(server);
+
+//Config
+server.listen(80);
+io.set("log level", 0);
+
+
+io.sockets.on('connection', function (socket) {
+//  db.all("SELECT * FROM messages", function(e, r) {
+//    socket.emit("message history", {"history": r});
+//    console.log(r);
+//  });
+
+ socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+
+  socket.emit("test", {hello:'test'});
+  //console.log("SENT TEST");
+  socket.on('disconnect', function() {
+    io.sockets.emit('user left room');
+  });
+  socket.emit("user entered room");
+
+
+  socket.on('chat message', function (data) {
+    data.create_date = Math.floor(new Date().getTime() / 1000);
+    data.room = "blah";
+    io.sockets.emit('chat message', data);
+    console.log(data);
+
+    // record the chat message at some point
+    // db.run("INSERT INTO messages (create_date, user, room, message) values (?, ?, ?, ?)", data.create_date, data.user, data.room, data.message);
+  });
+});
+/////////////////////////////////////////////////////
 
 
 
@@ -200,7 +269,11 @@ app.get('/confirm/:email/:key', function(req, res) {
 
 
 
-/// LISTENING AT BOTTOM
+
+
+
+
+////////////// LISTENING AT PORT //////////////////////////
 app.listen(SERVER_PORT, function() {
 	console.log("\n********************************\n* SERVER RUNNING ON PORT: " + SERVER_PORT + " *\n********************************\n");
 });
