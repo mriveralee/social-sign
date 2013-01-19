@@ -190,6 +190,16 @@ app.get('/confirm/:email/:key', function(req, res) {
 	}
 });
 
+
+
+//////////////// Socket IO 
+
+
+
+
+
+
+
 /// LISTENING AT BOTTOM
 app.listen(SERVER_PORT, function() {
 	console.log("\n********************************\n* SERVER RUNNING ON PORT: " + SERVER_PORT + " *\n********************************\n");
