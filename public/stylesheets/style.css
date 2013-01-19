@@ -1,21 +1,16 @@
+html {
+  background-color: rgba(255,255,255, 1);
+
+}
+
 body {
   margin:0px 0px; /* Browsers will set a margin > 0 by default, so reset it to 0 here */
   /*overflow: hidden;*/
   font-family: 'Open Sans', sans-serif;
 }
 
-
-
-
-
-
-
-html {
-  background-color: rgba(135,129,189, 1);
-
-}
 #container{
-  background-color: rgba(135,129,189, 1);
+  background-color: rgba(255,10,255, 1);
   font-family: "Open Sans", sans-serif;
 }
 
@@ -83,20 +78,6 @@ html {
   vertical-align:top;
   display:block;
 }
-
-#home-splash {
-  color: red;
-  font-size: 20px;
-}
-
-#nav-links {
-  position: absolute;
-  right: 0px;
-  margin: 1px 20px;
-  font-size: 20px;
-}
-
-
 
 
 

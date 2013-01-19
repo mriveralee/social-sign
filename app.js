@@ -55,8 +55,6 @@ app.configure(function() {
 
 	//DEBUG
 	app.use(express.errorHandler());
-	//Passport
-	app.use(passport.initialize());
 	app.use(app.router);
 	app.use(express.static(__dirname + '/public'));
 });
@@ -121,11 +119,6 @@ app.get('/', function(req, res) {
 	});
 });
 
-app.get('/account', ensureAuthenticated, function(req, res) {
-	res.render('account', {
-		user : req.user
-	});
-});
 
 app.get('/login', function(req, res) {
 	res.render('login', {
