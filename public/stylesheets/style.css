@@ -1,0 +1,109 @@
+body {
+  margin:0px 0px; /* Browsers will set a margin > 0 by default, so reset it to 0 here */
+  /*overflow: hidden;*/
+  font-family: 'Open Sans', sans-serif;
+}
+
+
+
+
+
+
+
+html {
+  background-color: rgba(135,129,189, 1);
+
+}
+#container{
+  background-color: rgba(135,129,189, 1);
+  font-family: "Open Sans", sans-serif;
+}
+
+#tag-img{
+  position: relative;
+  padding: 10px, 10px, 10px, 10px;
+}
+
+.textbox {
+  width: 35em;
+  height: 1.5em;
+  font-size: 12pt;
+  vertical-align: middle;
+}
+
+.button {
+  -moz-box-shadow:inset 0px 1px 0px 0px #e6cafc;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #e6cafc;
+  box-shadow:inset 0px 1px 0px 0px #e6cafc;
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c579ff), color-stop(1, #46196b) );
+  background:-moz-linear-gradient( center top, #c579ff 5%, #46196b 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c579ff', endColorstr='#46196b');
+  background-color:#c579ff;
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  border:1px solid #5b1f8c;
+  display:inline-block;
+  color:#ffffff;
+  font-family:arial;
+  font-size:15px;
+  font-weight:bold;
+  padding:6px 24px;
+  text-decoration:none;
+  text-shadow:1px 1px 0px #8628ce;
+}
+.button:hover {
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #46196b), color-stop(1, #c579ff) );
+  background:-moz-linear-gradient( center top, #46196b 5%, #c579ff 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#46196b', endColorstr='#c579ff');
+  background-color:#46196b;
+}
+.button:active {
+  position:relative;
+  top:1px;
+}
+
+/***** NEWLY ADDED *************/
+
+
+
+#wrapper {
+  height: 10000px;
+}
+
+#head-nav{
+  background-color: #FFFFFF;
+  text-align:right;
+  font-size:11px;
+  color:#161616;
+  width: 100%;
+  height:35px;
+  position:fixed;
+  top:0px;
+  vertical-align:top;
+  display:block;
+}
+
+#home-splash {
+  color: red;
+  font-size: 20px;
+}
+
+#nav-links {
+  position: absolute;
+  right: 0px;
+  margin: 1px 20px;
+  font-size: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
