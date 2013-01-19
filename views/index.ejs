@@ -4,9 +4,9 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script type="text/javascript" src="js/jquery.scrollTo-1.4.3.1-min.js"></script>
     <script src="js/functions.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
+    <script src="js/socket.io/socket.io.js"></script>
   <script>
-    var socket = io.connect('http://localhost');
+    var socket = io.connect('http://localhost:80');
     socket.on('news', function (data) {
       console.log(data);
       socket.emit('my other event', { my: 'data' });
@@ -14,7 +14,7 @@
   </script>
 
 
-    
+
 
   <link href="http://fonts.googleapis.com/css?family=Open+Sans|Bowlby+One+SC|Sigmar+One" rel="stylesheet" type="text/css">
   <link href="stylesheets/style.css" rel="stylesheet" type="text/css">

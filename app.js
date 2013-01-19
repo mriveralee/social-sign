@@ -227,10 +227,10 @@ var socketApp = require('http').createServer(express())
   , server = require('http').createServer(app)
   , io = require('socket.io').listen(server);
 
+
 //Config
 server.listen(80);
 io.set("log level", 0);
-
 
 io.sockets.on('connection', function (socket) {
 //  db.all("SELECT * FROM messages", function(e, r) {
