@@ -6,6 +6,7 @@ var express = require('express')
 	, http = require('http');
 var routes = require('./routes');
 
+
 //Port Number set up
 process.env.NODE_ENV = 'development';
 process.env.port = 8000;
@@ -88,37 +89,38 @@ app.configure('development', function() {
 
 //Gesture data (contains user-defined and standard schema)
 var gestureDataSchema = new mongoose.Schema({
-	'std': Array,
-	'user_defined': Array
+	'std': {type: Array},
+	'user_defined': {type: Array}
 });
 //A single gesture object
 var gestureSchema = new mongoose.Schema({
-	'name' : String,
-	'data' : String
+	'name' : {type:String},
+	'start_num_fingers' : {type: Number, default: 0},
+	'end_num_fingers' : {type: Number, default: 0}//{type:Object, default: {}}
 });
 
 
 //Stores a bunch of chat message for a room
 var chatLogSchema = new mongoose.Schema({
-	'room_id': String,
-	'chat_log' : Array
+	'room_id': {type:String, default:""},
+	'chat_log' : {type:Array, default:[]}
 });
 
 //Stores a single message
 var chatMsgSchema = new mongoose.Schema({
-	'username': String,
-	'date_created': String,
-	'message' : String
+	'username': {type:String, default:""},
+	'date_created': {type:String, default:""},
+	'message' : {type:String, default:""},
 });
 
 
 var userSchema = new mongoose.Schema({
-	'id' : String,
-	'username' : String,
-	'email' : String,
-    'oauth_token' : String,
-	'oauth_secret' : String,
-	'confirmation_key' : String,
+	'id' : {type:String, default:""},
+	'username' : {type:String, default:""},
+	'email' : {type:String, default:""},
+    'oauth_token' : {type:String, default:""},
+	'oauth_secret' : {type:String, default:""},
+	'confirmation_key' : {type:String, default:""},
 	'confirmed' : Boolean,
 	'date_created' : Number,
 	'timestamp_last_tagged' : Number
@@ -168,11 +170,11 @@ app.get('/room/:room_id', function(req, res) {
 	var roomID = req.param('room_id') ? req.param('room_id') : "r" + parseInt(Math.round(Math.random()*103843));
 	
 	var whereParams = {room_id: roomID};
-	var data = {
-		'room_id': roomID,
-	};
+	// var data = {
+	// 	'room_id': roomID,
+	// };
 
-	chatLogModel.update(whereParams, data, {upsert: true}, function(err, room){
+	chatLogModel.update(whereParams, whereParams, {upsert: true}, function(err, room){
 			if (err) {
 				throw err;
 				console.log("Could not upsert user");
@@ -181,7 +183,7 @@ app.get('/room/:room_id', function(req, res) {
 				if (room.chat_log) {
 					console.log(room);
 				}
-				console.log("Chat Log in DB");
+				//console.log("Chat Log in DB");
 			}
 		});
 	console.log(roomID);
@@ -198,23 +200,16 @@ app.get('/room/:room_id', function(req, res) {
 
 });
 
+// app.get('/login', function(req, res) {
+// 	res.render('login', {
+// 		user : req.user
+// 	});
+// });
 
-
-
-
-
-
-
-app.get('/login', function(req, res) {
-	res.render('login', {
-		user : req.user
-	});
-});
-
-app.get('/logout', function(req, res) {
-	req.logout();
-	res.redirect('/');
-});
+// app.get('/logout', function(req, res) {
+// 	req.logout();
+// 	res.redirect('/');
+// });
 
 
 //Route for confirming a user in the db
@@ -296,41 +291,51 @@ io.sockets.on('connection', function (socket) {
 //    console.log(r);
 //  });
 
- socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
 
-  socket.emit("test", {hello:'test'});
+
+ // socket.emit("test", {hello:'test'});
   //console.log("SENT TEST");
+
   socket.on('disconnect', function() {
     io.sockets.emit('user left room');
   });
-  socket.emit("user entered room");
 
 
-  socket.on('chat-message', function (data) {
-    
-    data.room = "blah";
-    io.sockets.emit('chat message', data);
-    console.log(data);
+/////////////// CHAT SOCKET /////////////////
+ 
+ var getChatLogForRoom = function(data) {
+	if(!data) {return;}
+	var whereParams = {
+		'room_id': data.room_id
+	};
+	//console.log("WHERE: " + whereParams);
+	chatLogModel.findOne(whereParams, function(err, room) {
+		if (err) {
+			console.log(err);
+			return
+		}
+		if (!room){
+			return;
+		}
+		//console.log("FOUND ROOM: " + JSON.stringify(room.chat_log));
+		var array = room.chat_log.slice(1,room.chat_log.length);
+		//console.log(array);
+		socket.emit('chat-message-log', array);
+  	});
+};
 
-    // record the chat message at some point
-    // db.run("INSERT INTO messages (create_date, user, room, message) values (?, ?, ?, ?)", data.create_date, data.user, data.room, data.message);
+socket.on('chat-get-log', function (data) {
+    getChatLogForRoom(data);
   });
 
 
 //CHAT SOCKET
 var emitChatMessageToClients = function(data) {
 	io.sockets.emit('chat-message-received', data);
-	console.log("EMITTED");
 }
-
 
  socket.on('chat-message-sent', function (data) {
  	data.create_date = Math.floor(new Date().getTime() / 1000);
- 	console.log("BUTTON-CLICKED ON CLIENT: ");
- 	console.log(data);
  	emitChatMessageToClients(data);
 
  	var whereParams = {
@@ -343,36 +348,104 @@ var emitChatMessageToClients = function(data) {
 		}
 
 		if (!room){
+			//console.log("NO ROOM");
 			return;
 		}
 
-		var messageArray = [data];
+		///var messageArray = [];
+		//console.log("CHAT DATA! :  " + JSON.stringify(data));
+		var msgs = [];
+		msgs = msgs.concat(room.chat_log,data);
 
-		room.chat_log = room.chat_log.concat(messageArray);
+		//console.log(JSON.stringify(msgs));
+
+		room.chat_log = msgs;
+
 		room.save(function(err) {
 	    	if (err){
 	        	console.log('error saving chat');
 		    } 
 		    else {
-		        console.log('saved chat');
+		    	//console.log(JSON.stringify(room));
+		        //console.log('SAVED CHAT!');
 			}
 		});
 
 
 	});
-
-
-
-
-
  });
+
+///////// CHARACTER RECOGNITION FOR SERVER ////////////
+	var emitCharacterToClients = function(data) {
+		sockets.emit('chat-message-received', data);
+	}
+
+
+
+	socket.on('undetected-character-sent', function (data) {
+		//Compare to characters in the database
+	  	var characterData = {
+	    	start_num_fingers: data.start_num_fingers,
+	    	end_num_fingers: data.end_num_fingers,
+	    };
+	    console.log(data);
+		//if match emit matched character 
+		gestureModel.findOne(characterData, function(err, match) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+
+			if (!match){
+				console.log('NO MATCH');
+				return;
+			}
+
+			else {
+				socket.emit('detected-character-received', match);
+				console.log('MATCH!');
+			}
+		});
+	});
+
 
 
 
 });
 /////////////////////////////////////////////////////
+/// SAMPLE CHARACTERS FOR THE DATABASE
+
+var addCharToDatabase = function (data) {
+	gestureModel.update(data, data, {upsert: true}, function(err, letter){
+			if (err) {
+				throw err;
+				console.log("Could not upsert user");
+			}
+			if (!letter) return;
+			else {	
+				console.log(data.name+ " IN DB");
+			}
+		});
+};
 
 
+///SAMPLE CHARACTERS 
+var sampleChars = function() {
+	var letter1 = {
+		name: "A",
+		start_num_fingers: 5,
+    	end_num_fingers: 0
+	};
+	var letter2 = {
+		name: "C",
+		start_num_fingers: 5,
+    	end_num_fingers: 2
+	};
+
+	addCharToDatabase(letter1);
+	addCharToDatabase(letter2);
+};
+sampleChars();
 
 
 

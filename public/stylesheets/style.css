@@ -79,6 +79,16 @@ body {
 }
 
 
+#detected-character-box {
+  font-size: 90px;
+  width: 100px;
+  height: 130px;
+  font-color: blue;
+  border: 1px solid black;
+  position: absolute;
+  right: 50px;
+  text-align: center;
+}
 
 
 
