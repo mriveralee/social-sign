@@ -333,29 +333,35 @@ var emitChatMessageToClients = function(data) {
 		     // 	start_num_fingers: data.start_num_fingers,
 		   // 	end_num_fingers: data.end_num_fingers,
 
-		    console.log(characterData);
+		    // console.log(data.sent_username+ "********");
 			//if match emit matched character 
+			var username = data.sent_username;
 			gestureModel.findOne(characterData, function(err, match) {
 				if (err) {
 					console.log(err);
-					return;
+
 				}
 
 				if (!match){
 					console.log('NO MATCH');
-					socket.emit('detected-character-received', {sent_username:data.sent_username});
-					return;
+					socket.emit('detected-character-received', {name: "--",sent_username:data.sent_username});
+					console.log(data.sent_username+ "********");
 				}
 
 				else {
-					match.sent_username = data.sent_username;
-					console.log(match);
-					socket.emit('detected-character-received', match);
-					socket.emit('sent-character-received', match);
+					match.sent_username = username;
+					//console.log(match);
+					var data1 = {
+						name: match.name,
+						sent_username: data.sent_username
+					};
+					data.name = match.name;
+					socket.emit('detected-character-received', data);
+					socket.emit('sent-character-received', data);
+					//console.log("SEVER UNDETECTED USER: " +data+ "********");
 					console.log('MATCH!');
 				}
 			});
-			return;
 		}
 		
 

@@ -145,12 +145,14 @@ var sendCharacterToServer = function(data) {
 }
 
  socket.on("detected-character-received", function (data) {
-      var character = (data && data.name) ? data.name : "";
-      var sent_username = (data && data.sent_username) ? data.sent_username : "";
+      if (!data) {return;}
+      var character = data.name;
+      var sent_username = data.sent_username;
+      console.log("SENT USER:" + data.sent_username);
+      console.log("GLOBAL:" + GLOBAL.username);
       
-      console.log('DETECTED CHAR: ' + data);
-
-      if(character && character !==  '-' && character !== "" && sent_username == GLOBAL.username) {
+console.log("SSS:" + (sent_username == GLOBAL.username));
+      if(sent_username == GLOBAL.username) {
             $('#detected-character').html(character);
             $('#detected-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
             $('#leap-character-status-box').html("Sign recognized!");
@@ -174,7 +176,7 @@ var receivedCharacterFromServer = function(data) {
 
 
  socket.on("sent-character-received", function (data) {
-      var character = (data) ? data.name : data;
+      var character = (data) ? data.name : "";
 
       console.log('DETECTED CHAR: ' + data);
       if (data && data.sent_username == GLOBAL.username) {
@@ -183,8 +185,7 @@ var receivedCharacterFromServer = function(data) {
       }
 
       else if(data && character && data.sent_username != GLOBAL.username) {
-        if (character && character != '' && character != ' ') {
-         
+        if (character != '' && character != ' ') {
           //Update the Sign Received
          $('#received-character').html(character);
          $('#received-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
@@ -407,6 +408,7 @@ function init() {
             fingers_present: fingers_present,
             sent_username: GLOBAL.username
          }
+         console.log("SENT UP UN:" + characterData.sent_username);
         socket.emit('undetected-character-sent', characterData);
         DELAY = 1;
         startDelayDate = new Date();
