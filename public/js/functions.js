@@ -167,7 +167,7 @@ var sendCharacterToServer = function(data) {
 
 
 var receivedCharacterFromServer = function(data) {
-  var msgLogText = $('#chat-log').html() + "<br><span class='indent'><em>" 
+  var msgLogText = $('#chat-log').html() + "<br><span class='indent says'><em>" 
                       + data.sent_username + " sent a sign character: " + data.name+"</em></span>";
       $('#chat-log').html(msgLogText);
   };
