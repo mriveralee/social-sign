@@ -407,10 +407,12 @@ var emitChatMessageToClients = function(data) {
 	});
 
 ///// LEAP SOCKET
-	socket.on('leap-data-message', function (data) {
+	socket.on('leap-data-sent', function (data) {
 		//Compare to characters in the database
 		console.log(data);
 		console.log("LEAP RECEIVED!!");
+
+		socket.emit('leap-data-received', data);
 	});
 
 

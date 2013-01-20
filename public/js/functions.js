@@ -10,6 +10,9 @@ var KEY_CODE = {
 
 };
 var ws;
+var startDate = new Date();
+
+
 
 
 $(document).ready(function() {
@@ -168,8 +171,14 @@ function init() {
   
   // On message received
   ws.onmessage = function(event) {
-    socket.emit("leap-data-message", event.data);
-
+    var currentDate = new Date();
+    var currentTime = currentDate.getTime()/1000;
+    var timeElapsed = currentTime - startDate.getTime()/1000;
+    if (timeElapsed > 5) {
+      timeElapsed = 0;
+      startDate = new Date();
+      socket.emit("leap-data-sent", event.data);
+    }
    // var obj = JSON.parse(event.data);
     //var str = JSON.stringify(obj, undefined, 2);
     //document.getElementById("output").innerHTML = '<pre>' + str + '</pre>';
@@ -180,7 +189,9 @@ function init() {
     ws = null;
     //document.getElementById("main").style.visibility = "hidden";
     //document.getElementById("connection").innerHTML = "WebSocket connection closed";
-     socket.emit("leap-data-message", {data: "CLOSED LEAP"});
+    
+      socket.emit("leap-data-sent", {data: "CLOSED LEAP"});
+
 
   }
   
@@ -189,6 +200,12 @@ function init() {
     alert("Received error");
   };
 }
+
+//RECEIVE LEAP DATA
+ socket.on("leap-data-received", function (data) {
+     console.log(data);
+    });
+
 
 init();
 ////////////////////////////////////////////////////////////
