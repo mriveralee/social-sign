@@ -284,9 +284,10 @@ a img{border:0px;}
 
 #detected-character {
     float:left;
+
     text-align: center;
     margin-left: 30px;
-    padding-right: 20px;
+    padding-right: 18px;
 }
 
 #detected-character-sign {
@@ -297,9 +298,8 @@ a img{border:0px;}
 
 
 #detected-character-box {
- margin: 0px 20px;
-  font-size: 80px;
-  width: 205px;
+ margin: 0px 18px;
+  font-size: 76px;
   height:100px;
   line-height: 90px;
   color: black;

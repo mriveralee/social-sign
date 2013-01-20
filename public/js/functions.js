@@ -125,12 +125,15 @@ var sendCharacterToServer = function(data) {
  socket.on("detected-character-received", function (data) {
       var character = (data) ? data.name : "-";
       console.log('DETECTED CHAR: ' + data);
-      if(data && character) {
+      if(data && character && character != '-' && data.sent_username != GLOBAL.username) {
         $('#detected-character').html(character);
-        if (character && character != '' && character != ' ') {}
-         if(character == '-') character = 'dash';
-         $('#detected-character-sign').html('<img class="sign-img" src="../images/signs/'+character+'.png">');
-         $('#leap-character-status-box').html("Sign recognized!");
+         if (character && character != '' && character != ' ') {
+            if(character == '-') {
+              character = 'dash';
+            }
+            $('#detected-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
+            $('#leap-character-status-box').html("Sign recognized!");
+        }
       }
       else {
         $('#leap-character-status-box').html("No sign recognized.");
@@ -149,7 +152,7 @@ var sendCharacterToServer = function(data) {
         $('#received-character').html(character);
         if (character && character != '' && character != ' ') {}
          if(character == '-') character = 'dash';
-         $('#received-character-sign').html('<img class="sign-img" src="../images/signs/'+character+'.png">');
+         $('#received-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
          $('#received-character-status-box').html("Sign received from " +data.from_user +"!");
       }
       else {
@@ -348,11 +351,13 @@ function init() {
 
         // POST: [0, 1, 1, 0, 0]
 
-        // var characterData = { 
-        //    start_num_fingers: numFingersStart,
-        //    end_num_fingers: numFingersFinish
-        // }
-        // socket.emit('undetected-character-sent', characterData);
+         var characterData = { 
+            start_num_fingers: numFingersStart,
+            end_num_fingers: numFingersFinish,
+            fingers_present: fingers_present,
+            sent_username: GLOBAL.username
+         }
+        socket.emit('undetected-character-sent', characterData);
         DELAY = 0;
         STANDARD_POS = 0;
       }

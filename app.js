@@ -95,7 +95,7 @@ var gestureDataSchema = new mongoose.Schema({
 //A single gesture object
 var gestureSchema = new mongoose.Schema({
 	'name' : {type:String},
-	'fingers_present' : {type:Array}.
+	'fingers_present' : {type:Array},
 	'start_num_fingers' : {type: Number, default: 0},
 	'end_num_fingers' : {type: Number, default: 0}//{type:Object, default: {}}
 });
@@ -326,11 +326,14 @@ var emitChatMessageToClients = function(data) {
 
 	socket.on('undetected-character-sent', function (data) {
 		//Compare to characters in the database
-	  	var characterData = {
-	    	start_num_fingers: data.start_num_fingers,
-	    	end_num_fingers: data.end_num_fingers,
-	    };
-	    console.log(data);
+	  	 if (!data && !data.fingers_present){return;}
+	  	 var characterData = {
+	  		 fingers_present: data.fingers_present
+	     };
+	     // 	start_num_fingers: data.start_num_fingers,
+	   // 	end_num_fingers: data.end_num_fingers,
+
+	    console.log(characterData);
 		//if match emit matched character 
 		gestureModel.findOne(characterData, function(err, match) {
 			if (err) {
@@ -344,6 +347,8 @@ var emitChatMessageToClients = function(data) {
 			}
 
 			else {
+				match.sent_username = data.sent_username;
+				console.log(match);
 				socket.emit('detected-character-received', match);
 				console.log('MATCH!');
 			}
