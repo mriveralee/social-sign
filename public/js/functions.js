@@ -154,6 +154,7 @@ var sendCharacterToServer = function(data) {
             $('#detected-character').html(character);
             $('#detected-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
             $('#leap-character-status-box').html("Sign recognized!");
+            receivedCharacterFromServer(data);
       }
       else if (sent_username == GLOBAL.username) {
         $('#leap-character-status-box').html("No sign recognized.");
@@ -163,6 +164,13 @@ var sendCharacterToServer = function(data) {
       }
        //console.log(msgLogText);
     });
+
+
+var receivedCharacterFromServer = function(data) {
+  var msgLogText = $('#chat-log').html() + "<br><span class='indent'><em>" 
+                      + data.sent_username + " sent a sign character: " + data.name+"</em></span>";
+      $('#chat-log').html(msgLogText);
+  };
 
 
  socket.on("sent-character-received", function (data) {
@@ -178,9 +186,10 @@ var sendCharacterToServer = function(data) {
         if (character && character != '' && character != ' ') {
          
           //Update the Sign Received
-          $('#received-character').html(character);
+         $('#received-character').html(character);
          $('#received-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
          $('#received-character-status-box').html("Sign received from " +data.sent_username +"!");
+          receivedCharacterFromServer(data);
         }
         else {
           //No character sent back
