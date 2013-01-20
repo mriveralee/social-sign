@@ -6,7 +6,7 @@ var express = require('express')
 	, http = require('http');
 var routes = require('./routes');
 
-var CONSTANTS = require('constants.js');
+var CONSTANTS = require('./constants');
 
 
 //Port Number set up
@@ -42,11 +42,11 @@ var mongoose = require('mongoose'),
 	MongoStore = require('connect-mongodb');
 var my_db = CONSTANTS.mongo_db;
 
-//'mongodb://nodejitsu_socialsign:1f4qmdssgdm4dnhscproqqkc8b@ds043927.mongolab.com:43927/nodejitsu_socialsign_nodejitsudb8876918957';
-//Local Debugging
+///Local Debugging
 //var my_db = 'mongodb://localhost/test';
 var db = mongoose.connect(my_db);
 
+console.log(my_db);
 /****************** END MONGODB *********************/
 //// TESTING NODE PAD APP CRAP
 
@@ -101,7 +101,7 @@ var gestureSchema = new mongoose.Schema({
 	'name' : {type:String},
 	'fingers_present' : {type:Array},
 	'start_num_fingers' : {type: Number, default: 0},
-	'end_num_fingers' : {type: Number, default: 0}//{type:Object, default: {}}
+	'end_num_fingers' : {type: Number, default: 0}
 });
 
 
