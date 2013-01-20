@@ -95,6 +95,7 @@ var gestureDataSchema = new mongoose.Schema({
 //A single gesture object
 var gestureSchema = new mongoose.Schema({
 	'name' : {type:String},
+	'fingers_present' : {type:Array}.
 	'start_num_fingers' : {type: Number, default: 0},
 	'end_num_fingers' : {type: Number, default: 0}//{type:Object, default: {}}
 });
@@ -385,17 +386,88 @@ var sampleChars = function() {
 	var letter1 = {
 		name: "A",
 		start_num_fingers: 5,
-    	end_num_fingers: 0
+    	end_num_fingers: 1,
+    	fingers_present: [1,0,0,0,0]
 	};
 	var letter2 = {
-		name: "C",
+		name: "B",
 		start_num_fingers: 5,
-    	end_num_fingers: 2
+    	end_num_fingers: 4,
+    	fingers_present: [1,1,1,1,0]
 	};
+
+	var letter3 = {
+		name: "D",
+		start_num_fingers: 5,
+    	end_num_fingers: 1,
+    	fingers_present: [0,1,0,0,0]
+	};
+
+	var letter4 = {
+		name: "E",
+		start_num_fingers: 5,
+    	end_num_fingers: 0,
+    	fingers_present: [0,0,0,0,0]
+	};
+
+	var letter5 = {
+		name: "F",
+		start_num_fingers: 5,
+    	end_num_fingers: 3,
+    	fingers_present: [0,0,1,1,1]
+	};
+
+	var letter6 = {
+		name: "H",
+		start_num_fingers: 5,
+    	end_num_fingers: 2,
+    	fingers_present: [0,1,1,0,0]
+	};
+	var letter7 = {
+		name: "I",
+		start_num_fingers: 5,
+    	end_num_fingers: 1,
+    	fingers_present: [0,0,0,0,1]
+	};
+	var letter8 = {
+		name: "L",
+		start_num_fingers: 5,
+    	end_num_fingers: 2,
+    	fingers_present: [1,1,0,0,0]
+	};
+	var letter9 = {
+		name: "W",
+		start_num_fingers: 5,
+    	end_num_fingers: 3,
+    	fingers_present: [0,1,1,1,0]
+	};
+	var letter10 = {
+		name: "Y",
+		start_num_fingers: 5,
+    	end_num_fingers: 2,
+    	fingers_present: [1,0,0,0,1]
+	};
+
+
+
+
 
 	addCharToDatabase(letter1);
 	addCharToDatabase(letter2);
+
+	addCharToDatabase(letter3);
+	addCharToDatabase(letter4);
+
+	addCharToDatabase(letter5);
+	addCharToDatabase(letter6);
+
+	addCharToDatabase(letter7);
+	addCharToDatabase(letter8);
+
+	addCharToDatabase(letter9);
+	addCharToDatabase(letter10);
 };
+
 sampleChars();
 
 
