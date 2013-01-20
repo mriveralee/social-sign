@@ -296,9 +296,7 @@ io.sockets.on('connection', function (socket) {
  // socket.emit("test", {hello:'test'});
   //console.log("SENT TEST");
 
-  socket.on('disconnect', function() {
-    io.sockets.emit('user left room');
-  });
+
 
 
 /////////////// CHAT SOCKET /////////////////
@@ -408,6 +406,14 @@ var emitChatMessageToClients = function(data) {
 		});
 	});
 
+///// LEAP SOCKET
+	socket.on('leap-data-message', function (data) {
+		//Compare to characters in the database
+		console.log(data);
+		console.log("LEAP RECEIVED!!");
+	});
+
+
 
 
 
@@ -449,6 +455,7 @@ sampleChars();
 
 
 
+////////////////////////// WEB SOCKETS FOR LEAP
 
 
 

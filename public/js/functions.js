@@ -1,4 +1,4 @@
-
+/////// GLOBAL VARS 
 var GLOBAL = {};
   GLOBAL.username = "User " + parseInt(Math.round(Math.random()*112764+13));
   //Gets room id from url
@@ -9,8 +9,7 @@ var KEY_CODE = {
     ENTER: 13
 
 };
-
-
+var ws;
 
 
 $(document).ready(function() {
@@ -142,6 +141,57 @@ $('#message-text-box').keyup(function(event) {
             $.scrollTo( '1200px', 1200, wrapperAxis);
         }
     );
+
+//////////////////////////////
+
+
+/////////WEB SOCKETS
+
+
+
+// Support both the WebSocket and MozWebSocket objects
+if ((typeof(WebSocket) == 'undefined') &&
+    (typeof(MozWebSocket) != 'undefined')) {
+  WebSocket = MozWebSocket;
+}
+
+// Create the socket with event handlers
+function init() {
+  //Create and open the socket
+  ws = new WebSocket("ws://localhost:6437/");
+  
+  // On successful connection
+  ws.onopen = function(event) {
+    //document.getElementById("main").style.visibility = "visible";
+    //document.getElementById("connection").innerHTML = "WebSocket connection open!";
+  };
+  
+  // On message received
+  ws.onmessage = function(event) {
+    socket.emit("leap-data-message", event.data);
+
+   // var obj = JSON.parse(event.data);
+    //var str = JSON.stringify(obj, undefined, 2);
+    //document.getElementById("output").innerHTML = '<pre>' + str + '</pre>';
+  };
+  
+  // On socket close
+  ws.onclose = function(event) {
+    ws = null;
+    //document.getElementById("main").style.visibility = "hidden";
+    //document.getElementById("connection").innerHTML = "WebSocket connection closed";
+     socket.emit("leap-data-message", {data: "CLOSED LEAP"});
+
+  }
+  
+  //On socket error
+  ws.onerror = function(event) {
+    alert("Received error");
+  };
+}
+
+init();
+////////////////////////////////////////////////////////////
 
 
 
