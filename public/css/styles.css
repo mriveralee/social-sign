@@ -17,7 +17,7 @@ a img{border:0px;}
 	margin:0px auto 300px auto;
 	background:url(../images/body-bg.png);
 	overflow:auto;
-	padding-bottom:100px;
+	padding-bottom:150px;
 }
 
 /****************************************************/
@@ -323,9 +323,9 @@ a img{border:0px;}
 
 
 #received-character-box {
- margin: 0px 20px;
-  font-size: 80px;
-  width: 205px;
+ margin: 0px 18px;
+  font-size: 76px;
+
   height:100px;
   line-height: 90px;
   color: black;

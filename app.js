@@ -184,7 +184,7 @@ app.get('/room/:room_id', function(req, res) {
 			}
 			else {
 				if (room.chat_log) {
-					console.log(room);
+					//console.log(room);
 				}
 				//console.log("Chat Log in DB");
 			}

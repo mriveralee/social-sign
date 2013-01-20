@@ -1,6 +1,6 @@
 /////// GLOBAL VARS 
 var GLOBAL = {};
-  GLOBAL.username = "User-" + parseInt(Math.round(Math.random()*112764+13));
+  GLOBAL.username = "User-" + Math.round(Math.random()*1127640+13);
   //Gets room id from url
   GLOBAL.room_id = (document.URL).replace(/^.*room\//, "");
   GLOBAL.has_chat_log = false;
