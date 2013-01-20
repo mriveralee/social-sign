@@ -336,6 +336,11 @@ var emitChatMessageToClients = function(data) {
 		    // console.log(data.sent_username+ "********");
 			//if match emit matched character 
 			var username = data.sent_username;
+			var callback = function(newData) {
+					
+					socket.broadcast.emit('sent-character-received', data);
+
+			};
 			gestureModel.findOne(characterData, function(err, match) {
 				if (err) {
 					console.log(err);
@@ -345,57 +350,81 @@ var emitChatMessageToClients = function(data) {
 				if (!match){
 					console.log('NO MATCH');
 					socket.emit('detected-character-received', {name: "--",sent_username:data.sent_username});
-					console.log(data.sent_username+ "********");
+					//console.log(data.sent_username+ "********");
 				}
 
 				else {
 					match.sent_username = username;
+						data.name = match.name;
+					match.save(function(err) {
+				    	if (err){
+				        	console.log('error saving chat');
+					    } 
+					    else {
+					    	
+					    	//console.log(JSON.stringify(room));
+					        //console.log('SAVED CHAT!');
+						}
+					});
+
 					//console.log(match);
 					var data1 = {
 						name: match.name,
 						sent_username: data.sent_username
 					};
-					data.name = match.name;
 					socket.emit('detected-character-received', data);
-					socket.emit('sent-character-received', data);
+				
+					
 					//console.log("SEVER UNDETECTED USER: " +data+ "********");
-					console.log('MATCH!');
+					//console.log('MATCH!');
+					callback(data);
 				}
 			});
 		}
 		
 
-		// BY NUM FINGERS changed
-		if (data) {
-			var characterData = {
-		  		end_num_fingers: data.end_num_fingers,
-		  		start_num_fingers: data.start_num_fingers,
-		     };
-		     // 	start_num_fingers: data.start_num_fingers,
-		   // 	end_num_fingers: data.end_num_fingers,
+		// // BY NUM FINGERS changed
+		// if (data) {
+		// 	var characterData = {
+		//   		end_num_fingers: data.end_num_fingers,
+		//   		start_num_fingers: data.start_num_fingers,
+		//      };
+		//      // 	start_num_fingers: data.start_num_fingers,
+		//    // 	end_num_fingers: data.end_num_fingers,
 
-		    console.log(characterData);
-			//if match emit matched character 
-			gestureModel.findOne(characterData, function(err, match) {
-				if (err) {
-					console.log(err);
-					return;
-				}
+		//     console.log(characterData);
+		// 	//if match emit matched character 
+		// 	gestureModel.findOne(characterData, function(err, match) {
+		// 		if (err) {
+		// 			console.log(err);
+		// 			return;
+		// 		}
 
-				if (!match){
-					console.log('NO MATCH');
-					socket.emit('detected-character-received', {});
-					return;
-				}
+		// 		if (!match){
+		// 			console.log('NO MATCH');
+		// 			socket.emit('detected-character-received', {});
+		// 			return;
+		// 		}
 
-				else {
-					match.sent_username = data.sent_username;
-					console.log(match);
-					socket.emit('detected-character-received', match);
-					console.log('MATCH!');
-				}
-			});
-		}
+		// 		else {
+
+		// 			match.sent_username = data.sent_username;
+		// 			match.save(function(err) {
+		// 	    	if (err){
+		// 	        	console.log('error saving chat');
+		// 		    } 
+		// 		    else {
+		// 		    	//console.log(JSON.stringify(room));
+		// 		        //console.log('SAVED CHAT!');
+		// 			}
+		// });
+
+		// 			//console.log(match);
+		// 			socket.emit('detected-character-received', match);
+		// 			console.log('MATCH!');
+		// 		}
+		// 	});
+		// }
 
 	});
 

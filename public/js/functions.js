@@ -152,7 +152,7 @@ var sendCharacterToServer = function(data) {
       console.log("GLOBAL:" + GLOBAL.username);
       
 console.log("SSS:" + (sent_username == GLOBAL.username));
-      if(sent_username == GLOBAL.username) {
+      if(sent_username == GLOBAL.username && character != "--") {
             $('#detected-character').html(character);
             $('#detected-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
             $('#leap-character-status-box').html("Sign recognized!");
@@ -177,19 +177,14 @@ var receivedCharacterFromServer = function(data) {
 
  socket.on("sent-character-received", function (data) {
       var character = (data) ? data.name : "";
-
-      console.log('DETECTED CHAR: ' + data);
-      if (data && data.sent_username == GLOBAL.username) {
-        //Don't update our own Sign Recevied messages
-        return;
-      }
-
-      else if(data && character && data.sent_username != GLOBAL.username) {
-        if (character != '' && character != ' ') {
+      var user=data.sent_username;
+      console.log('DETECTED CHAR: ' + data.sent_username);
+      if(data && character) {
+        if (character != "" && character != "--") {
           //Update the Sign Received
          $('#received-character').html(character);
          $('#received-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
-         $('#received-character-status-box').html("Sign received from " +data.sent_username +"!");
+         $('#received-character-status-box').html("Sign received from <br>" +data.sent_username +"!");
           receivedCharacterFromServer(data);
         }
         else {
