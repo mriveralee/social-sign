@@ -325,34 +325,74 @@ var emitChatMessageToClients = function(data) {
 
 
 	socket.on('undetected-character-sent', function (data) {
-		//Compare to characters in the database
-	  	 if (!data && !data.fingers_present){return;}
-	  	 var characterData = {
-	  		 fingers_present: data.fingers_present
-	     };
-	     // 	start_num_fingers: data.start_num_fingers,
-	   // 	end_num_fingers: data.end_num_fingers,
+		//BY SPECIFIC FINGER HIDDEN
+	  	 if (data && data.fingers_present){
+		  	 var characterData = {
+		  		 fingers_present: data.fingers_present
+		     };
+		     // 	start_num_fingers: data.start_num_fingers,
+		   // 	end_num_fingers: data.end_num_fingers,
 
-	    console.log(characterData);
-		//if match emit matched character 
-		gestureModel.findOne(characterData, function(err, match) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		    console.log(characterData);
+			//if match emit matched character 
+			gestureModel.findOne(characterData, function(err, match) {
+				if (err) {
+					console.log(err);
+					return;
+				}
 
-			if (!match){
-				console.log('NO MATCH');
-				return;
-			}
+				if (!match){
+					console.log('NO MATCH');
+					socket.emit('detected-character-received', {sent_username:data.sent_username});
+					return;
+				}
 
-			else {
-				match.sent_username = data.sent_username;
-				console.log(match);
-				socket.emit('detected-character-received', match);
-				console.log('MATCH!');
-			}
-		});
+				else {
+					match.sent_username = data.sent_username;
+					console.log(match);
+					socket.emit('detected-character-received', match);
+					socket.emit('sent-character-received', match);
+					console.log('MATCH!');
+				}
+			});
+			return;
+		}
+		
+
+		// BY NUM FINGERS changed
+		if (data) {
+		var characterData = {
+		  		end_num_fingers: data.end_num_fingers,
+		  		start_num_fingers: data.start_num_fingers,
+		     };
+		     // 	start_num_fingers: data.start_num_fingers,
+		   // 	end_num_fingers: data.end_num_fingers,
+
+		    console.log(characterData);
+			//if match emit matched character 
+			gestureModel.findOne(characterData, function(err, match) {
+				if (err) {
+					console.log(err);
+					return;
+				}
+
+				if (!match){
+					console.log('NO MATCH');
+					socket.emit('detected-character-received', {});
+					return;
+				}
+
+				else {
+					match.sent_username = data.sent_username;
+					console.log(match);
+					socket.emit('detected-character-received', match);
+					console.log('MATCH!');
+				}
+			});
+		}
+
+
+		}
 	});
 
 ///// LEAP SOCKET
@@ -398,7 +438,7 @@ var sampleChars = function() {
 		name: "B",
 		start_num_fingers: 5,
     	end_num_fingers: 4,
-    	fingers_present: [1,1,1,1,0]
+    	fingers_present: [0,1,1,1,1]
 	};
 
 	var letter3 = {

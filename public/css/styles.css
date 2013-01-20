@@ -300,10 +300,8 @@ a img{border:0px;}
 #detected-character-box {
  margin: 0px 18px;
   font-size: 76px;
-  height:100px;
   line-height: 90px;
   color: black;
-  border: 1px solid black;
   text-align: center;
   vertical-align: middle;
 }
@@ -331,7 +329,7 @@ a img{border:0px;}
   height:100px;
   line-height: 90px;
   color: black;
-  border: 1px solid black;
+ 
   text-align: center;
   vertical-align: middle;
 }

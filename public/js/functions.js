@@ -1,9 +1,10 @@
 /////// GLOBAL VARS 
 var GLOBAL = {};
-  GLOBAL.username = "User " + parseInt(Math.round(Math.random()*112764+13));
+  GLOBAL.username = "User-" + parseInt(Math.round(Math.random()*112764+13));
   //Gets room id from url
   GLOBAL.room_id = (document.URL).replace(/^.*room\//, "");
   GLOBAL.has_chat_log = false;
+  GLOBAL.friend_username = "";
 //KEY PRESS
 var KEY_CODE = {
     ENTER: 13
@@ -20,10 +21,11 @@ var ws;
 var STANDARD_POS = 0;
 var DELAY = 0;
 var startDate = new Date();
-var startTime;
+var startDelayDate;
 var numFingersStart;
 var numFingersFinish;
 var GESTURE_REC_TIME = 3;
+var DELAY_TIME = 3;
 
 var FINGER_LENGTHS = [0,0,0,0,0];
 var FINGER_X_LOC = [0,0,0,0,0];
@@ -37,6 +39,26 @@ var ringLen;
 
 
 $(document).ready(function() {
+
+$('#message-username').val(GLOBAL.username);
+
+$('#message-username').keyup(function(event) {
+    var curr = $('#message-username').val();
+    if (curr && curr != "" && curr != " ") {
+        GLOBAL.username = curr;
+    } 
+});
+
+
+$('#friend-username').keyup(function(event) {
+    var curr = $('#friend-username').val();
+    if (curr && curr != "" && curr != " ") {
+        GLOBAL.friend_username = curr;
+    } 
+});
+
+
+
 
 /////SOCKET IO //////////////////////////
  var socket = io.connect(window.location.hostname);
@@ -110,55 +132,62 @@ var testChar = false;
 
 
 var sendCharacterToServer = function(data) {
-  testChar = !testChar;
-  //Send test char
-  data = {
-    start_num_fingers: 5,
-    end_num_fingers: (testChar) ? 0 : 2,
-    room_id: GLOBAL.room_id,
-    username: GLOBAL.username
-  };
+  //testChar = !testChar;
+  // //Send test char
+  // data = {
+  //   start_num_fingers: 5,
+  //   end_num_fingers: (testChar) ? 0 : 2,
+  //   room_id: GLOBAL.room_id,
+  //   username: GLOBAL.username
+  // };
 
-  socket.emit("undetected-character-sent", data);
+  // socket.emit("undetected-character-sent", data);
 }
 
  socket.on("detected-character-received", function (data) {
-      var character = (data) ? data.name : "-";
+      var character = (data && data.name) ? data.name : "";
+      var sent_username = (data && data.sent_username) ? data.sent_username : "";
+      
       console.log('DETECTED CHAR: ' + data);
-      if(data && character && character != '-' && data.sent_username != GLOBAL.username) {
-        $('#detected-character').html(character);
-         if (character && character != '' && character != ' ') {
-            if(character == '-') {
-              character = 'dash';
-            }
+
+      if(character && character !==  '-' && character !== "" && sent_username == GLOBAL.username) {
+            $('#detected-character').html(character);
             $('#detected-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
             $('#leap-character-status-box').html("Sign recognized!");
-        }
       }
-      else {
+      else if (sent_username == GLOBAL.username) {
         $('#leap-character-status-box').html("No sign recognized.");
-                 $('#detected-character-sign').html('<img class="sign-img" src="../images/signs/dash.png">');
+        $('#detected-character').html('--');
 
-
+        $('#detected-character-sign').html('<img class="sign-img" src="../images/signs/dash.png">');
       }
        //console.log(msgLogText);
     });
 
 
  socket.on("sent-character-received", function (data) {
-      var character = (data) ? data.name : "-";
-      console.log('DETECTED CHAR: ' + data);
-      if(data && character) {
-        $('#received-character').html(character);
-        if (character && character != '' && character != ' ') {}
-         if(character == '-') character = 'dash';
-         $('#received-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
-         $('#received-character-status-box').html("Sign received from " +data.from_user +"!");
-      }
-      else {
-        $('#received-character-status-box').html("No sign received.");
-                 $('#received-character-sign').html('<img class="sign-img" src="../images/signs/dash.png">');
+      var character = (data) ? data.name : data;
 
+      console.log('DETECTED CHAR: ' + data);
+      if (data && data.sent_username == GLOBAL.username) {
+        //Don't update our own Sign Recevied messages
+        return;
+      }
+
+      else if(data && character && data.sent_username != GLOBAL.username) {
+        if (character && character != '' && character != ' ') {
+         
+          //Update the Sign Received
+          $('#received-character').html(character);
+         $('#received-character-sign').html('<img class="sign-img" src="../images/signs/'+character.toLowerCase()+'.png">');
+         $('#received-character-status-box').html("Sign received from " +data.sent_username +"!");
+        }
+        else {
+          //No character sent back
+          $('#received-character').html('--');
+          $('#received-character-status-box').html("No sign received.");
+          $('#received-character-sign').html('<img class="sign-img" src="../images/signs/dash.png">');
+        }
 
       }
        //console.log(msgLogText);
@@ -183,7 +212,7 @@ $('#message-text-box').keyup(function(event) {
  $("#message-send-button").click(function() {
     sendChatMessageToServer();
     var character = $('#message-text-box').val();
-    sendCharacterToServer(character);
+    //sendCharacterToServer(character);
 });
 
 
@@ -253,7 +282,8 @@ function init() {
           //if( (Math.abs(palmNormal[0]) < .2) && (Math.abs(palmNormal[1]) > .7) ){
            // document.getElementById("status").innerHTML = '<h1>STANDARD POS</h1>';
             var currentDate = new Date();
-            startTime = currentDate.getTime()/1000;
+            startDate = new Date();
+  
             numFingersStart = 5;
             STANDARD_POS = 1;
 
@@ -299,22 +329,33 @@ function init() {
           //  document.getElementById("status").innerHTML = '<h1>not standard pos</h1>';
           //}
         }
-        else{
-          $("leap-status-box").html('<em>Adjust hand to standard position.</em>');
-        } 
       }
       else{
         $("#leap-status-box").html('<em>Adjust hand to standard position.</em>');
       } 
     }
+    else if (DELAY) {
+       var currDate = new Date();
+        var timeSpent = (currDate.getTime()/1000 - startDelayDate.getTime()/1000);
+        var timeRemaining = DELAY_TIME-timeSpent;
+        
+        $("#leap-status-box").html('<em>Please Wait - Recognizing Gesture: </em><br>'+ (Math.round(timeRemaining*100)/100));
+        if (timeRemaining <= 0.0) {
+          STANDARD_POS = 0;
+          DELAY = 0;
+                  $("#leap-status-box").html('<em>Adjust hand to standard position.</em>');
+
+        }
+
+    }
     else{
-      var currentDate = new Date();
-      var timeSpent = (currentDate.getTime()/1000 - startTime);
+      var cD = new Date();
+      var timeSpent = (cD.getTime()/1000 - startDate.getTime()/1000);
         var timeRemaining = GESTURE_REC_TIME-timeSpent;
         
         $("#leap-status-box").html('<em>Please Position Your Gesture Now: </em><br>'+ (Math.round(timeRemaining*100)/100));
 
-      if( timeSpent > GESTURE_REC_TIME){
+      if( timeRemaining <= 0.0){
 
 
         // _________________ CHECK WHICH FINGERS ARE LEFT _______________
@@ -347,7 +388,7 @@ function init() {
             }
           } 
 
-        console.log('Fingers present: ' + fingers_present);
+        //console.log('Fingers present: ' + fingers_present);
 
         // POST: [0, 1, 1, 0, 0]
 
@@ -358,8 +399,8 @@ function init() {
             sent_username: GLOBAL.username
          }
         socket.emit('undetected-character-sent', characterData);
-        DELAY = 0;
-        STANDARD_POS = 0;
+        DELAY = 1;
+        startDelayDate = new Date();
       }
     }
   };
@@ -385,7 +426,7 @@ function init() {
 
 //RECEIVE LEAP DATA
  socket.on("leap-data-received", function (data) {
-     console.log(data);
+     //console.log(data);
     });
 
 
