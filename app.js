@@ -158,10 +158,12 @@ var UserModel = db.model('User', userSchema);
 
 ///Routes
 app.get('/', function(req, res) {
-	res.render('index', {
-		user : req.user
-	});
+	var roomID = Math.round(Math.random()*100000000);
+	var route = '/room/' + roomID;
+	res.redirect(route);
 });
+
+
 
 
 
@@ -210,65 +212,6 @@ app.get('/room/:room_id', function(req, res) {
 // 	req.logout();
 // 	res.redirect('/');
 // });
-
-
-//Route for confirming a user in the db
-
-app.get('/confirm/:email/:key', function(req, res) {
-	var key = req.param('key');
-	var email = req.param('email');
-	if(email && key) {
-		//Check if actual email
-		var isEmail = Validator.check(email).isEmail();
-		if(!isEmail) {
-			sendErrorResponse(res, "Invalid Email address");
-		}
-		var validEmail = Validator.sanitize(email).str;
-		var validKey = Validator.sanitize(key).str;
-
-		//If no trickery in our email or key, find the user in our db
-		if(validEmail && validKey && validKey != "") {
-			var whereUserParams = {
-				'email' : validEmail,
-				'confirmation_key' : validKey
-			};
-
-			UserModel.findOne(whereUserParams, function(err, user) {
-		    	//No such user/key
-		    	if (err) {
-		    		sendErrorResponse(res, "Invalid Confirmation Key");
-		    		return;
-		    	}
-		    	//If we have a user, update them
-		    	if (user != null) {
-			   		console.log(user);
-			   		if (user.confirmed === true) {
-			   			sendResponse(res, "You are already confirmed! Wooo!");
-						return;
-			   		}
-			   		else {
-			   			user.confirmed = 1;
-						user.save(function(err) {
-					    	if (err){
-					        	console.log('error confirming user');
-					    		sendErrorResponse(res, "Error confirming user");
-					    		return;
-						    } 
-						    else {
-						        console.log('success confirming user');
-						    	sendResponse(res, "You are confirmed! Wooo!");
-								return;
-							}
-				    	});
-					}
-				}
-			});
-		}
-	} 
-	else {
-		sendErrorResponse(res, "Invalid Confirmation Key");
-	}
-});
 
 
 

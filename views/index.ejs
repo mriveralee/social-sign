@@ -30,10 +30,11 @@
 <body>
 
   <div id="header">
-  <div id="logo"><a href="#"><img src="../images/logo2.png" width="189"></a></div>
+  <div id="logo"><a href="#"><img style="vertical-align:middle;" src="../images/logo2.png" width="189"></a><br><span class="subtitle-logo">Handing Communication to You</span>
+  </div>
   <ul id="main-menu">
         <li><a href="#get-started">Get Started</a></li>
-        <li><a href="#sign-chat">Chat</a></li>
+        <li><a href="#sign-chat">Sign Away</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#connect">Connect</a></li>
         <li><a href="#work">Work</a></li>
@@ -57,12 +58,15 @@
             <p class="sign-directions">
               <img src="../images/2.png"  class="valign-center"/>
               Select a username to be associated with your messages.
-              <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Username: </label><input id="message-username" type="text" onfocus="this.value=''" value="User 123"></input>
+              <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Your Username: </label><input id="message-username" type="text" onfocus="this.value=''" value=""></input>
             <br><br></p> 
             <p class="sign-directions">
               <img src="../images/3.png" class="valign-center top-adj" />
-              Start learning and sign to friends!<br>
+              Start learning and sign away!<br>
             </p>
+            <p class="center-title">
+             <br><label>• Have a friend? Enter their username (if you want to sign to them!): </label><input id="friend-username" type="text" onfocus="this.value=''" value="Username"></input>
+           </p>
         </div>
     <div class="bottom-divider"></div> 
     </div>
@@ -76,6 +80,7 @@
           </div--><br>
             <div class="col">
             <h2 class="center-title">&nbsp;&nbsp;&nbsp;&nbsp;Messages</h2>
+             
              <div id='chat-box'>
 
             <div id='chat-log'> 
@@ -93,28 +98,53 @@
         </div>
             
             <div class="col col-mid">
-            <h2 class="center-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Your Sign Visualized</h2>
-            <p>
-              <div id="leap-visualizer-box">
-              </div>
-             </p>
-              <div id="leap-status-box">Status</div>
+              <h2 class="center-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Your Sign Visualized</h2>
+              <p>
+                <div id="leap-visualizer-box">
+                </div>
+       
+                <div id="leap-status-box">
+                  <span style="color:red">Leap not connected. Connect <br>your leap and refresh your browser.</span>
+                </div>
+              </p>
             </div>
+
             
             <div class="col indent-col">
-            <h2 class="center-title">Sign Recognition</h2>
-            <p>
-              <div id='detected-character-box'>
-              -
-            </div>
-           
-            <div id="leap-character-status-box">
-                <em>Leap connected - No signs recognized.</em>
+              <h2 class="center-title">Your Sign Recognition</h2>
+        
+                <div id='detected-character-box'>
+                  <div id="detected-character">
+                    --
+                  </div>
+                  <div id="detected-character-sign">
+                    <img class="sign-img" src="../images/signs/dash.png"> 
+                  </div>
+                </div>
+                <div style="clear:both"></div>
+                 <div id="leap-character-status-box">
+                    <em>No signs recognized.</em>
+                  </div>
 
-            </div>
-            <h2 class="center-title">Character from User123</h2>
 
-            </p>
+              <h2 class="center-title">Sign Received </h2>
+              <p> 
+                 <div id='received-character-box'>
+                  <div id="received-character">
+                    --
+                  </div>
+                  <div id="received-character-sign">
+                    <img class="sign-img" src="../images/signs/dash.png"> 
+                  </div>
+                </div>
+                <div style="clear:both"></div>
+                
+                
+                 <div id="received-character-status-box">
+                    <em>No sign received.</em>
+                  </div>
+
+              </p>
             </div>
         </div>    
         <div class="bottom-divider"></div>

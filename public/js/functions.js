@@ -108,6 +108,7 @@ var sendChatMessageToServer = function() {
 //////SEND UNDETECTED CHARACTER TO SERVER //////////////
 var testChar = false;
 
+
 var sendCharacterToServer = function(data) {
   testChar = !testChar;
   //Send test char
@@ -125,10 +126,42 @@ var sendCharacterToServer = function(data) {
       var character = (data) ? data.name : "-";
       console.log('DETECTED CHAR: ' + data);
       if(data && character) {
-        $('#detected-character-box').html(character);
+        $('#detected-character').html(character);
+        if (character && character != '' && character != ' ') {}
+         if(character == '-') character = 'dash';
+         $('#detected-character-sign').html('<img class="sign-img" src="../images/signs/'+character+'.png">');
+         $('#leap-character-status-box').html("Sign recognized!");
+      }
+      else {
+        $('#leap-character-status-box').html("No sign recognized.");
+                 $('#detected-character-sign').html('<img class="sign-img" src="../images/signs/dash.png">');
+
+
       }
        //console.log(msgLogText);
     });
+
+
+ socket.on("sent-character-received", function (data) {
+      var character = (data) ? data.name : "-";
+      console.log('DETECTED CHAR: ' + data);
+      if(data && character) {
+        $('#received-character').html(character);
+        if (character && character != '' && character != ' ') {}
+         if(character == '-') character = 'dash';
+         $('#received-character-sign').html('<img class="sign-img" src="../images/signs/'+character+'.png">');
+         $('#received-character-status-box').html("Sign received from " +data.from_user +"!");
+      }
+      else {
+        $('#received-character-status-box').html("No sign received.");
+                 $('#received-character-sign').html('<img class="sign-img" src="../images/signs/dash.png">');
+
+
+      }
+       //console.log(msgLogText);
+    });
+
+
 
 
 
@@ -159,6 +192,7 @@ if ((typeof(WebSocket) == 'undefined') &&
     (typeof(MozWebSocket) != 'undefined')) {
   WebSocket = MozWebSocket;
 }
+var LEAP_CONNECTED = false;
 
 // Create the socket with event handlers
 function init() {
@@ -168,11 +202,15 @@ function init() {
   // On successful connection
   ws.onopen = function(event) {
     //document.getElementById("main").style.visibility = "visible";
-    $("#leap-status-box").html("Leap connection open!");
+    //$("#leap-status-box").html("Leap connected!");
   };
   
   // On message received
   ws.onmessage = function(event) {
+    if(!LEAP_CONNECTED) {
+       LEAP_CONNECTED= true;
+       $("#leap-status-box").html("Leap connected!");
+     }
     // var currentDate = new Date();
     // var currentTime = currentDate.getTime()/1000;
     // var timeElapsed = currentTime - myStartDate.getTime()/1000;

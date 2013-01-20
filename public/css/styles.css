@@ -26,7 +26,7 @@ a img{border:0px;}
 
 #header{
 	width:864px;
-	height:105px;
+	height:115px;
 	background-color:#05c1b8;
 	padding:0px 43px;
 	position: fixed;
@@ -37,6 +37,7 @@ a img{border:0px;}
 }
 #header #logo{
 	padding-top:10px;
+    padding-bottom: 6px;
 	float:left;
 }
 #header #main-menu{float:right; padding-top:45px;}
@@ -51,7 +52,7 @@ a img{border:0px;}
 /* ABOUT SECTION */
 /****************************************************/
 
-#about{margin:0px 43px; padding-top:115px;}
+#about{margin:0px 43px; padding-top:90px;}
 #about h1{float:left;}
 #about #top-social{float:right; padding-top:62px;}
 #about #top-social li{float:left; list-style:none; margin-left:10px;}
@@ -238,6 +239,13 @@ a img{border:0px;}
     font-size:18px;
 }
 
+#friend-username {
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    font-size:12px;
+}
+
+
 #message-text-box {
     padding-top:4px;
     margin-top:3px;
@@ -271,37 +279,100 @@ a img{border:0px;}
   width: 570px;
   border: 1px solid red;
   left: 30px;
-  position:absolute;
+  position:relative;
 }
 
-#detected-character-box {
-    margin: 0px 50px;
-  font-size: 90px;
-  width: 150px;
-  height: 130px;
-  color: blue;
-  border: 1px solid black;
-  position: absolute;
-  text-align: center;
+#detected-character {
+    float:left;
+    text-align: center;
+    margin-left: 30px;
+    padding-right: 20px;
 }
+
+#detected-character-sign {
+    float:right;
+    margin-left: 3px;
+    text-align: center;
+}
+
+
+#detected-character-box {
+ margin: 0px 20px;
+  font-size: 80px;
+  width: 205px;
+  height:100px;
+  line-height: 90px;
+  color: black;
+  border: 1px solid black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* RECEIVED CHARACTERS */
+
+#received-character {
+    float:left;
+    text-align: center;
+    margin-left: 30px;
+    padding-right: 20px;
+}
+
+#received-character-sign {
+    float:right;
+    margin-left: 3px;
+    text-align: center;
+}
+
+
+#received-character-box {
+ margin: 0px 20px;
+  font-size: 80px;
+  width: 205px;
+  height:100px;
+  line-height: 90px;
+  color: black;
+  border: 1px solid black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#received-character-status-box{
+  font-size: 12px;
+  margin-left: 0px;
+  color:black;
+  text-align: center;
+  position:relative;
+    margin-top: -10px;
+}
+
+
 
 
 #leap-status-box{
   font-size: 13px;
+  width: 240px;
   color: black;
   position: relative;
   text-align: center;
+
+  margin-left:40px;
+  text-align:center;
 }
 
 #leap-character-status-box{
-  font-size: 15px;
+  font-size: 12px;
+  margin-left: 0px;
   color:black;
-    top:140px;
-    position: relative;
+  text-align: center;
+  position:relative;
+     margin-top: -10px;
 }
 
 
-
+.sign-img {
+    width: 100px;
+    height: 100px;
+}
 
 /* RENDERER */
  canvas { 
@@ -320,6 +391,10 @@ a img{border:0px;}
 
 #leap-visualizer-box {
     text-align:center;
+
+}
+
+#friend-username {
 
 }
 
@@ -408,3 +483,9 @@ a img{border:0px;}
 }
 
 .top-divider2{margin-bottom:0px;}
+
+.subtitle-logo {
+    margin-left: 7px;
+font-weight: bold;
+    font-size: 13px;
+}
