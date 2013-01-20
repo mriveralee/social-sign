@@ -1,7 +1,7 @@
 {
   "name": "finger-me",
   "description": "Pennapps Spring 2013 App",
-  "version": "0.0.1-21",
+  "version": "0.0.1-22",
   "author:": "Michael Rivera",
   "private": false,
   "dependencies": {
