@@ -361,7 +361,7 @@ var emitChatMessageToClients = function(data) {
 
 		// BY NUM FINGERS changed
 		if (data) {
-		var characterData = {
+			var characterData = {
 		  		end_num_fingers: data.end_num_fingers,
 		  		start_num_fingers: data.start_num_fingers,
 		     };
@@ -391,8 +391,6 @@ var emitChatMessageToClients = function(data) {
 			});
 		}
 
-
-		}
 	});
 
 ///// LEAP SOCKET
