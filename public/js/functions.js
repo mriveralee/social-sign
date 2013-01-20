@@ -9,10 +9,31 @@ var KEY_CODE = {
     ENTER: 13
 
 };
+
+var myStartDate;
+
+
+//// NICK'S LEAP CONNECTION VARIABLES
+
 var ws;
+
+var STANDARD_POS = 0;
+var DELAY = 0;
 var startDate = new Date();
+var startTime;
+var numFingersStart;
+var numFingersFinish;
+var GESTURE_REC_TIME = 3;
 
+var FINGER_LENGTHS = [0,0,0,0,0];
+var FINGER_X_LOC = [0,0,0,0,0];
+var DELTA_FINGER_LENGTH = 15;
+var DELTA_FINGER_X_LOC = 5;
 
+var thumbLen;
+var indexLen;
+var middleLen;
+var ringLen;
 
 
 $(document).ready(function() {
@@ -31,8 +52,8 @@ socket.emit("chat-get-log", {
 });
 
 var receivedChatFromServer = function(data) {
-  var msgLogText = $('#chat-log').html() + "<br>" 
-                      + data.username + ": " + data.chat_msg;
+  var msgLogText = $('#chat-log').html() + "<br><span class='indent'>" 
+                      + data.username + ": " + data.chat_msg+"</span>";
       $('#chat-log').html(msgLogText);
 };
 
@@ -86,6 +107,7 @@ var sendChatMessageToServer = function() {
 
 //////SEND UNDETECTED CHARACTER TO SERVER //////////////
 var testChar = false;
+
 var sendCharacterToServer = function(data) {
   testChar = !testChar;
   //Send test char
@@ -131,27 +153,7 @@ $('#message-text-box').keyup(function(event) {
 
 
 
-
-
-
-
-////////////// SCROLL TO DIV /////////////
-    var wrapperDiv = "#wrapper";
-    var wrapperAxis = {axis: 'y'};
-    $("#nav-links").click(
-        function(){
-            console.log('scrolled!');
-            $.scrollTo( '1200px', 1200, wrapperAxis);
-        }
-    );
-
-//////////////////////////////
-
-
-/////////WEB SOCKETS
-
-
-
+/////////WEB SOCKETS FOR LEAP
 // Support both the WebSocket and MozWebSocket objects
 if ((typeof(WebSocket) == 'undefined') &&
     (typeof(MozWebSocket) != 'undefined')) {
@@ -166,23 +168,160 @@ function init() {
   // On successful connection
   ws.onopen = function(event) {
     //document.getElementById("main").style.visibility = "visible";
-    //document.getElementById("connection").innerHTML = "WebSocket connection open!";
+    $("#leap-status-box").html("Leap connection open!");
   };
   
   // On message received
   ws.onmessage = function(event) {
-    var currentDate = new Date();
-    var currentTime = currentDate.getTime()/1000;
-    var timeElapsed = currentTime - startDate.getTime()/1000;
-    if (timeElapsed > 5) {
-      timeElapsed = 0;
-      startDate = new Date();
-      socket.emit("leap-data-sent", event.data);
+    // var currentDate = new Date();
+    // var currentTime = currentDate.getTime()/1000;
+    // var timeElapsed = currentTime - myStartDate.getTime()/1000;
+    // if (timeElapsed > 5) {
+    //   timeElapsed = 0;
+    //   myStartDate = new Date();
+    //   socket.emit("leap-data-sent", event.data);
+    // }
+
+
+    var obj = JSON.parse(event.data);
+    var str = JSON.stringify(obj, undefined, 2);
+
+    // __________________ VARIABLES __________________
+    
+    var finger, palmVelocity, numFingers, palmNormal, palmPosition; 
+      
+      if( obj.hands)  {
+        var hand0 = obj.hands[0];
+        palmVelocity = (hand0) ? hand0.palmVelocity : [0,0,0];
+        palmNormal = (hand0) ? hand0.palmNormal : [0, 0,0];
+        palmPosition = (hand0) ? hand0.palmPosition :[0,0,0];
+     }
+
+      if ( obj.pointables ) {
+        finger = obj.pointables[0];
+        numFingers = (finger) ? obj.pointables.length : 0;
+      }
+
+
+    // __________________ DETECT STANDARD POSITION __________________
+
+    if(!STANDARD_POS){
+      //document.getElementById("status").innerHTML = '<h1>not standard pos</h1>';
+      if( palmVelocity && (Math.abs(palmVelocity[0]) < 100) ){
+        if(numFingers == 5){
+          //if( (Math.abs(palmNormal[0]) < .2) && (Math.abs(palmNormal[1]) > .7) ){
+           // document.getElementById("status").innerHTML = '<h1>STANDARD POS</h1>';
+            var currentDate = new Date();
+            startTime = currentDate.getTime()/1000;
+            numFingersStart = 5;
+            STANDARD_POS = 1;
+
+
+            // __________________ SORT FINGERS __________________
+            var fingerArray = [];
+
+            for (var i = 0; i < numFingers; i++) {
+              fingerArray.push(obj.pointables[i]);
+            }
+
+
+            for (var i = 0; i < numFingers; i++) {
+                for (var j = i+1; j < numFingers; j++) {
+                    if (fingerArray[i].tipPosition[0] > fingerArray[j].tipPosition[0]) {
+                        var temp = fingerArray[i];
+                        fingerArray[i] = fingerArray[j];
+                        fingerArray[j] = temp;
+                    }
+                }
+            }
+
+            thumbLen = fingerArray[0].tipPosition[0] - palmPosition[0];
+            indexLen = fingerArray[1].tipPosition[0] - palmPosition[0];
+            middleLen = fingerArray[2].tipPosition[0] - palmPosition[0];
+            ringLen = fingerArray[3].tipPosition[0] - palmPosition[0];
+            pinkyLen = fingerArray[4].tipPosition[0] - palmPosition[0];
+
+            // document.getElementById("sort").innerHTML = 'SORTED FINGERS<br>' + thumbLen + '<br>' + indexLen + '<br>' + middleLen + '<br>' + ringLen + '<br>' + pinkyLen;
+
+            //Store sorted finger lengths 
+            for (var i = 0; i < fingerArray.length; i++) {
+              FINGER_LENGTHS[i] = fingerArray[i].length;
+              FINGER_X_LOC[i] = fingerArray[i].tipPosition[0];
+            }
+            //console.log(FINGER_LENGTHS);
+
+
+
+
+          //}
+          //else{
+          //  document.getElementById("status").innerHTML = '<h1>not standard pos</h1>';
+          //}
+        }
+        else{
+          $("leap-status-box").html('<em>Adjust hand to standard position.</em>');
+        } 
+      }
+      else{
+        $("#leap-status-box").html('<em>Adjust hand to standard position.</em>');
+      } 
     }
-   // var obj = JSON.parse(event.data);
-    //var str = JSON.stringify(obj, undefined, 2);
-    //document.getElementById("output").innerHTML = '<pre>' + str + '</pre>';
+    else{
+      var currentDate = new Date();
+      var timeSpent = (currentDate.getTime()/1000 - startTime);
+        var timeRemaining = GESTURE_REC_TIME-timeSpent;
+        
+        $("#leap-status-box").html('<em>Please Position Your Gesture Now: </em><br>'+ (Math.round(timeRemaining*100)/100));
+
+      if( timeSpent > GESTURE_REC_TIME){
+
+
+        // _________________ CHECK WHICH FINGERS ARE LEFT _______________
+
+
+
+        numFingersFinish = obj.pointables.length;
+        //Fingers present at the end gesture 
+        finishFingers = obj.pointables;
+        //Boolean array of whether a finger is still present
+        var fingers_present = [0,0,0,0,0];
+
+          for (var i = 0; i < numFingersFinish; i++) {
+            
+            var bestMatch = 0; // finger_present number
+            var bestMatchDiff = 100000000;
+            
+            for (var j = 0; j < fingers_present.length; j++) {
+              var  diff = Math.abs(finishFingers[i].length - FINGER_LENGTHS[j]);
+              if( diff <= DELTA_FINGER_LENGTH 
+                  && fingers_present[j] == 0 
+                  && diff <= bestMatchDiff ) {
+                
+                bestMatch = j;
+                bestMatchDiff = diff;
+              }
+            }
+            if (bestMatchDiff < 100000000) {
+               fingers_present[bestMatch] = 1;
+            }
+          } 
+
+        console.log('Fingers present: ' + fingers_present);
+
+        // POST: [0, 1, 1, 0, 0]
+
+        // var characterData = { 
+        //    start_num_fingers: numFingersStart,
+        //    end_num_fingers: numFingersFinish
+        // }
+        // socket.emit('undetected-character-sent', characterData);
+        DELAY = 0;
+        STANDARD_POS = 0;
+      }
+    }
   };
+   
+
   
   // On socket close
   ws.onclose = function(event) {
@@ -211,10 +350,50 @@ init();
 ////////////////////////////////////////////////////////////
 
 
+/// VISUALIZER
+var VISUALIZER= {h: '500', w:'300', canvas: 'leap-visualizer-box'};
+ var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(30, VISUALIZER.w/VISUALIZER.w, 0.10, 1000);
+      var renderer = new THREE.WebGLRenderer();
+      renderer.setSize(VISUALIZER.w, VISUALIZER.w);
 
+      //console.log(renderer.domElement);
+      document.getElementById(VISUALIZER.canvas).appendChild(renderer.domElement); 
+      camera.position.z = 500;
+      camera.position.y = -100;
+      camera.lookAt(new THREE.Vector3(20,400,-100))
 
+      var fingers = {};
+      var spheres = {};
+      Leap.loop(function(frame) {
+        var fingerIds = {};
+        var handIds = {};
+        for (var pointableId = 0, pointableCount = frame.pointables.length; pointableId != pointableCount; pointableId++) {
+          var pointable = frame.pointables[pointableId];
+          var finger = fingers[pointable.id]
+          var origin = new THREE.Vector3(pointable.tipPosition[0], pointable.tipPosition[1], -pointable.tipPosition[2])
+          var direction = new THREE.Vector3(pointable.direction[0], pointable.direction[1], -pointable.direction[2]);
+          if (!finger) {
+            finger = new THREE.ArrowHelper(origin, direction, pointable.length,  Math.random()*0x0f0f0f + 0xf0f0f0);
+            fingers[pointable.id] = finger;
+            scene.add(finger);
+          } else {
+            finger.position = origin
+            finger.setDirection(direction)
+          }
+          finger.length = pointable.length
+          fingerIds[pointable.id] = true
+        }
 
+        for (fingerId in fingers) {
+          if (!fingerIds[fingerId]) {
+            scene.remove(fingers[fingerId])
+            delete fingers[fingerId]
+          }
+        }
 
+        renderer.render(scene, camera);
+      });
 
 
 

@@ -1,0 +1,410 @@
+body{
+	background:#333333 url(../images/page-bg.jpg);
+	margin:0px;
+	font: 400 12px/22px 'Open Sans', Verdana, Helvetica, sans-serif;
+	color:#6a6969;
+}
+h1{font: 400 58px/60px 'Bree Serif', Georgia, serif; color:#ef841c;}
+h2{font: 400 18px/22px 'Bree Serif', Georgia, serif; color:#ef841c;}
+h3{font: 400 14px/16px 'Bree Serif', Georgia, serif; color:#ef841c;}
+ul{margin:0px; padding:0px;}
+a {text-decoration:none; color:#6a6969;}
+a:hover {color:#979797;}
+a img{border:0px;}
+
+#container{
+	width:950px;
+	margin:0px auto 300px auto;
+	background:url(../images/body-bg.png);
+	overflow:auto;
+	padding-bottom:100px;
+}
+
+/****************************************************/
+/* HEADER */
+/****************************************************/
+
+#header{
+	width:864px;
+	height:105px;
+	background-color:#05c1b8;
+	padding:0px 43px;
+	position: fixed;
+	top:0px;
+	left:50%;
+	margin: 0 0 0 -475px;
+    z-index: 10000;
+}
+#header #logo{
+	padding-top:10px;
+	float:left;
+}
+#header #main-menu{float:right; padding-top:45px;}
+#header #main-menu li{
+	float:left;
+	list-style:none;
+	margin-left:27px;
+	font: 400 16px/20px 'Bree Serif', Georgia, serif;
+}
+
+/****************************************************/
+/* ABOUT SECTION */
+/****************************************************/
+
+#about{margin:0px 43px; padding-top:115px;}
+#about h1{float:left;}
+#about #top-social{float:right; padding-top:62px;}
+#about #top-social li{float:left; list-style:none; margin-left:10px;}
+#about #top-social .facebook{
+	text-indent:-9999px; 
+	display:block; 
+	width:26px; 
+	height:26px; 
+	background:url(../images/sm-facebook-icon.png) no-repeat;
+}
+#about #top-social .twitter{
+	text-indent:-9999px; 
+	display:block; 
+	width:31px; 
+	height:24px; 
+	background:url(../images/sm-twitter-icon.png) no-repeat;
+}
+#about #top-social .linkedin{
+	text-indent:-9999px; 
+	display:block; 
+	width:26px; 
+	height:26px; 
+	background:url(../images/sm-linkedin-icon.png) no-repeat;
+}
+#about .content{overflow:auto;}
+#about .content img{float:left; margin-right:40px; border:5px solid #222222;}
+#about .content #service-icons{margin-top:20px;}
+#about .content #service-icons li{
+	display:block;
+	width:108px;
+	height:108px;
+	text-indent:-9999px;
+	list-style:none;
+	float:left;
+	margin-right:20px;
+}
+#about .content #service-icons li.services-design{background:url(../images/icon-1.png) no-repeat;}
+#about .content #service-icons li.services-mobile{background:url(../images/icon-2.png) no-repeat;}
+#about .content #service-icons li.services-film{background:url(../images/icon-3.png) no-repeat;}
+#about .content #service-icons li.services-photo{background:url(../images/icon-4.png) no-repeat;}
+
+/****************************************************/
+/* EXPERIENCE SECTION */
+/****************************************************/
+
+#experience{margin:0px 43px; padding-top:115px;}
+#experience .col{
+	width:235px;
+	float:left;
+}
+#experience .content{overflow:auto;}
+#experience .col-mid{margin:0px 65px;}
+
+/****************************************************/
+/* WORK SECTION */
+/****************************************************/
+
+#work{margin:0px 43px; padding-top:115px;}
+#work .content{overflow:auto;}
+#work #work-thumbs li{
+	list-style:none;
+	float:left;
+	margin:0px 20px 15px 0px;
+	padding:0px;
+}
+#work #work-thumbs li.last{margin:0px;}
+
+/****************************************************/
+/* CONNECT SECTION */
+/****************************************************/
+#connect{margin:0px 43px; padding-top:115px;}
+#connect .content{overflow:auto;}
+#connect #form{
+	width:410px;
+	float:left;
+}
+#connect #form span{
+	display:block;
+	float:left;
+	width:100px;
+	padding-top:5px;
+	font: 400 14px/16px 'Bree Serif', Georgia, serif;
+}
+#connect #form input{
+	float:left;
+	width:255px;
+	border:0px;
+	color:#3b3b3b;
+	padding:10px 10px 10px 30px;
+	font: 400 11px/20px 'Open Sans', Verdana, Helvetica, sans-serif;
+	margin-bottom:10px;
+}
+#connect #form textarea{
+	float:left;
+	border:0px;
+	width:255px;
+	height:100px;
+	padding:10px 10px 10px 30px;
+	font: 400 11px/20px 'Open Sans', Verdana, Helvetica, sans-serif;
+	color:#3b3b3b;
+}
+
+#connect #form input.name{background:#222222 url(../images/icon-user.png) no-repeat 10px 8px;}
+#connect #form input.email{background:#222222 url(../images/icon-mail.png) no-repeat 10px 9px;}
+#connect #form textarea.message{background:#222222 url(../images/icon-message.png) no-repeat 10px 8px;}
+#connect #form input.submit{ 
+	width:75px;   
+	height:30px;
+	float:right;
+	padding:0px 0px 5px 0px;
+	margin:10px 16px 0px 0px;
+	background:#222222;
+	color:#3b3b3b;
+	font: 400 14px/16px 'Bree Serif', Georgia, serif;
+}
+
+#connect #social-footer{
+	width:300px;
+	float:left;
+	margin-left:75px;
+}
+#connect #social-footer #sm-links{margin-top:25px;}
+#connect #social-footer #sm-links li{
+	list-style:none;
+	float:left;
+}
+#connect #social-footer #sm-links li a{
+	display:block;
+	text-indent:-9999px;
+	width:26px; 
+	height:26px;
+	margin-right:10px;
+}
+#connect #social-footer #sm-links li a.facebook{background:url(../images/sm-facebook-icon.png) no-repeat;}
+#connect #social-footer #sm-links li a.twitter{background:url(../images/sm-twitter-icon.png) no-repeat; width:31px;}
+#connect #social-footer #sm-links li a.dribble{background:url(../images/sm-dribble-icon.png) no-repeat;}
+#connect #social-footer #sm-links li a.vimeo{background:url(../images/sm-vimeo-icon.png) no-repeat; width:27px;}
+#connect #social-footer #sm-links li a.google{background:url(../images/sm-google-icon.png) no-repeat;}
+#connect #social-footer #sm-links li a.youtube{background:url(../images/sm-youtube-icon.png) no-repeat; width:28px;}
+#connect #social-footer #sm-links li a.linkedin{background:url(../images/sm-linkedin-icon.png) no-repeat;}
+
+/****************************************************/
+/* MISC */
+/****************************************************/
+.top-divider, .bottom-divider{
+	width:100%;
+	height:9px;
+	background:url(../images/divider.png) repeat-x;
+	clear:both;
+}
+.top-divider{margin-bottom:40px;}
+.bottom-divider{margin-top:40px;}
+
+
+
+
+#chat-box {
+  width: 200px;
+  position: absolute;
+  border-radius: 10px
+}
+
+#chat-log {
+  background-color: whitesmoke;
+  width: 270px;
+  height: 300px;
+  overflow-y: auto;
+  position: relative;
+  border-radius: 10px;
+  border: 1px solid rgb(40,40,40);
+
+}
+
+
+#message-send-box {
+  position:absolute;
+  width:240px;
+  top: 300px;
+
+}
+#message-username {
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    font-size:18px;
+}
+
+#message-text-box {
+    padding-top:4px;
+    margin-top:3px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+     background-color: whitesmoke;
+  width: 205px;
+  position: relative;
+}
+
+/*#message-text-box {
+  background-color: white;
+  width: 400px;
+  max-width:  400px;
+  height: 100px;
+  position: relative;
+}*/
+
+#message-send-button {
+        margin-top:3px;
+  position:absolute;
+  font-size: 30px;
+  font-weight: bold;
+  height: 74px;
+  width:60px;
+}
+
+
+#recognition-box {
+  height: 500px;
+  width: 570px;
+  border: 1px solid red;
+  left: 30px;
+  position:absolute;
+}
+
+#detected-character-box {
+    margin: 0px 50px;
+  font-size: 90px;
+  width: 150px;
+  height: 130px;
+  color: blue;
+  border: 1px solid black;
+  position: absolute;
+  text-align: center;
+}
+
+
+#leap-status-box{
+  font-size: 13px;
+  color: black;
+  position: relative;
+  text-align: center;
+}
+
+#leap-character-status-box{
+  font-size: 15px;
+  color:black;
+    top:140px;
+    position: relative;
+}
+
+
+
+
+/* RENDERER */
+ canvas { 
+  width: 180px; 
+  height: 200px; 
+  border-radius: 20px;
+  background-color: rgba(30,30,30, 1.0); 
+}
+
+#leap-visualizer {
+  width: 200px;
+  height: 200px;
+  top: 150px;
+  position: relative;
+}
+
+#leap-visualizer-box {
+    text-align:center;
+
+}
+
+/****************************************************/
+/* ABOUT SECTION */
+/****************************************************/
+
+#get-started{margin:0px 43px; padding-top:90px;}
+#get-started h1{float:left;}
+#get-started #top-social{float:right; padding-top:62px;}
+#get-started #top-social li{float:left; list-style:none; margin-left:10px;}
+#get-started #top-social .facebook{
+    text-indent:-9999px; 
+    display:block; 
+    width:26px; 
+    height:26px; 
+    background:url(../images/sm-facebook-icon.png) no-repeat;
+}
+#get-started #top-social .twitter{
+    text-indent:-9999px; 
+    display:block; 
+    width:31px; 
+    height:24px; 
+    background:url(../images/sm-twitter-icon.png) no-repeat;
+}
+#get-started #top-social .linkedin{
+    text-indent:-9999px; 
+    display:block; 
+    width:26px; 
+    height:26px; 
+    background:url(../images/sm-linkedin-icon.png) no-repeat;
+}
+#get-started .content{overflow:auto;}
+#get-started .content .neutral-description img{}
+#get-started .content .neutral-description{margin-right:40px;font-weight: bold;text-align:center; font-size: 24;float:left; border:5px solid #222222;}
+
+#get-started .content #service-icons{margin-top:20px;}
+#get-started .content #service-icons li{
+    display:block;
+    width:108px;
+    height:108px;
+    text-indent:-9999px;
+    list-style:none;
+    float:left;
+    margin-right:20px;
+}
+#get-started .content #service-icons li.services-design{background:url(../images/icon-1.png) no-repeat;}
+#get-started .content #service-icons li.services-mobile{background:url(../images/icon-2.png) no-repeat;}
+#get-started .content #service-icons li.services-film{background:url(../images/icon-3.png) no-repeat;}
+#get-started .content #service-icons li.services-photo{background:url(../images/icon-4.png) no-repeat;}
+
+.valign-center {
+    vertical-align: middle;
+    margin-right: 15px;
+    float:left;
+}
+
+.sign-directions {
+    font-size: 17px;
+}
+.top-adj {
+    top: -12px;
+    position:relative;
+    z-index:0;
+}
+
+
+
+#sign-chat{margin:0px 20px; padding-top:90px;}
+#sign-chat .col{
+    width:255px;
+    float:left;
+}
+#sign-chat .content{overflow:auto;}
+#sign-chat .col-mid{margin:0px 45px;}
+
+.indent {
+    margin-left: 3px;
+}
+.center-title {
+    text-align: center;
+}
+
+.indent-col {
+    margin-left: 30px;
+}
+
+.top-divider2{margin-bottom:0px;}

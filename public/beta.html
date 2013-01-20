@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Leap JavaScript API</title>
+<script>
+var ws;
+var STANDARD_POS = 0;
+var DELAY = 0;
+var startDate = new Date();
+var startTime;
+var numFingersStart;
+var numFingersFinish;
+var GESTURE_REC_TIME = 2;
+
+var FINGER_LENGTHS = [0,0,0,0,0];
+var FINGER_X_LOC = [0,0,0,0,0];
+var DELTA_FINGER_LENGTH = 15;
+var DELTA_FINGER_X_LOC = 5;
+
+var thumbLen;
+var indexLen;
+var middleLen;
+var ringLen;
+var pinkyLen;
+
+
+// Support both the WebSocket and MozWebSocket objects
+if ((typeof(WebSocket) == 'undefined') &&
+    (typeof(MozWebSocket) != 'undefined')) {
+  WebSocket = MozWebSocket;
+}
+
+function isValidObject(objToTest) {
+  if (null == objToTest) return false;
+  if ("undefined" == typeof(objToTest)) return false;
+  return true;
+}
+
+// Create the socket with event handlers
+function init() {
+  //Create and open the socket
+  ws = new WebSocket("ws://localhost:6437/");
+  
+  // On successful connection
+  ws.onopen = function(event) {
+    document.getElementById("main").style.visibility = "visible";
+    document.getElementById("connection").innerHTML = "WebSocket connection open!";
+  };
+  
+  // On message received
+  ws.onmessage = function(event) {
+    var obj = JSON.parse(event.data);
+    var str = JSON.stringify(obj, undefined, 2);
+
+    // __________________ VARIABLES __________________
+    
+    var finger, palmVelocity, numFingers, palmNormal, palmPosition;
+   
+      
+      if( obj.hands)  {
+        var hand0 = obj.hands[0];
+        palmVelocity = (hand0) ? hand0.palmVelocity : [0,0,0];
+        palmNormal = (hand0) ? hand0.palmNormal : [0, 0,0];
+        palmPosition = (hand0) ? hand0.palmPosition :[0,0,0];
+     }
+
+      if ( obj.pointables ) {
+        finger = obj.pointables[0];
+        numFingers = (finger) ? obj.pointables.length : 0;
+      }
+
+
+    document.getElementById("output").innerHTML = '<pre>' + str + '</pre>';
+    document.getElementById("fingers").innerHTML = '<b>FINGERS: </b>' + numFingers;
+
+
+    // __________________ DETECT STANDARD POSITION __________________
+
+    if(!STANDARD_POS){
+      document.getElementById("status").innerHTML = '<h1>not standard pos</h1>';
+      if( palmVelocity && (Math.abs(palmVelocity[0]) < 100) ){
+        if(numFingers == 5){
+          //if( (Math.abs(palmNormal[0]) < .2) && (Math.abs(palmNormal[1]) > .7) ){
+            document.getElementById("status").innerHTML = '<h1>STANDARD POS</h1>';
+            var currentDate = new Date();
+            startTime = currentDate.getTime()/1000;
+            numFingersStart = 5;
+            STANDARD_POS = 1;
+
+
+            // __________________ SORT FINGERS __________________
+            var fingerArray = [];
+
+            for (var i = 0; i < numFingers; i++) {
+              fingerArray.push(obj.pointables[i]);
+            }
+
+
+            for (var i = 0; i < numFingers; i++) {
+                for (var j = i+1; j < numFingers; j++) {
+                    if (fingerArray[i].tipPosition[0] > fingerArray[j].tipPosition[0]) {
+                        var temp = fingerArray[i];
+                        fingerArray[i] = fingerArray[j];
+                        fingerArray[j] = temp;
+                    }
+                }
+            }
+
+            thumbLen = fingerArray[0].tipPosition[0] - palmPosition[0];
+            indexLen = fingerArray[1].tipPosition[0] - palmPosition[0];
+            middleLen = fingerArray[2].tipPosition[0] - palmPosition[0];
+            ringLen = fingerArray[3].tipPosition[0] - palmPosition[0];
+            pinkyLen = fingerArray[4].tipPosition[0] - palmPosition[0];
+
+            document.getElementById("sort").innerHTML = 'SORTED FINGERS<br>' + thumbLen + '<br>' + indexLen + '<br>' + middleLen + '<br>' + ringLen + '<br>' + pinkyLen;
+
+            //Store sorted finger lengths 
+            for (var i = 0; i < fingerArray.length; i++) {
+              FINGER_LENGTHS[i] = fingerArray[i].length;
+              FINGER_X_LOC[i] = fingerArray[i].tipPosition[0];
+            }
+            //console.log(FINGER_LENGTHS);
+
+
+
+
+          //}
+          //else{
+          //  document.getElementById("status").innerHTML = '<h1>not standard pos</h1>';
+          //}
+        }
+        else{
+          document.getElementById("status").innerHTML = '<h1>not standard pos</h1>';
+        } 
+      }
+      else{
+        document.getElementById("status").innerHTML = '<h1>not standard pos</h1>';
+      } 
+    }
+    else{
+      var currentDate = new Date();
+      var timeSpent = (currentDate.getTime()/1000 - startTime);
+      document.getElementById("status").innerHTML = '<h1>' + currentDate.getTime()/1000 + '  ' + startTime + '  ' + timeSpent + '</h1>';
+      if( timeSpent > GESTURE_REC_TIME){
+        document.getElementById("status").innerHTML = '<h1>PROCESSING GESTURE</h1>';
+
+
+        // _________________ CHECK WHICH FINGERS ARE LEFT _______________
+
+
+
+        numFingersFinish = obj.pointables.length;
+        //Fingers present at the end gesture 
+        finishFingers = obj.pointables;
+        //Boolean array of whether a finger is still present
+        var fingers_present = [0,0,0,0,0];
+
+          for (var i = 0; i < numFingersFinish; i++) {
+            
+            var bestMatch = 0; // finger_present number
+            var bestMatchDiff = 100000000;
+            
+            for (var j = 0; j < fingers_present.length; j++) {
+              var  diff = Math.abs(finishFingers[i].length - FINGER_LENGTHS[j]);
+              if( diff <= DELTA_FINGER_LENGTH 
+                  && fingers_present[j] == 0 
+                  && diff <= bestMatchDiff ) {
+                
+                bestMatch = j;
+                bestMatchDiff = diff;
+              }
+            }
+            if (bestMatchDiff < 100000000) {
+               fingers_present[bestMatch] = 1;
+            }
+          } 
+
+
+        // numFingersFinish = obj.pointables.length;
+        // //Boolean array of whether a finger is still present
+        // var fingers_present = [0,0,0,0,0];
+
+        // for (var i = 0; i < fingers_present.length; i++) {
+        //   for (var j = 0; j < numFingersFinish; j++) {
+        //     var  diff = Math.abs(obj.pointables[j].length - FINGER_LENGTHS[i]);
+        //     if( diff <= DELTA_FINGER_LENGTH && fingers_present[i] ==0 ){
+        //       fingers_present[i] = 1;
+        //       break;
+        //     }
+        //   }
+        // } 
+
+        // numFingersFinish = obj.pointables.length;
+        // //Boolean array of whether a finger is still present
+        // var fingers_present = [0,0,0,0,0];
+
+        // for (var i = 0; i < fingers_present.length; i++) {
+        //   var bestMatch = 0; // finger_present number
+        //   var bestMatchDiff = 100000000;
+        //   for (var j = 0; j < numFingersFinish; j++) {
+        //     var  diff = Math.abs(obj.pointables[j].length - FINGER_LENGTHS[i]);
+        //     if( diff <= DELTA_FINGER_LENGTH  && diff <= bestMatchDiff){
+        //       bestMatch = j;
+        //       bestMatchDiff = diff;
+        //     }
+        //   }
+        //   //Only set finger present if has valid match
+        //   if (bestMatchDiff < 100000000) {
+        //     fingers_present[bestMatch] = 1;
+        //   }
+        // }        
+
+
+        // numFingersFinish = obj.pointables.length;
+        // //Boolean array of whether a finger is still present
+        // var fingers_present = [0,0,0,0,0];
+
+        // for (var i = 0; i < fingers_present.length; i++) {
+        //   for (var j = 0; j < numFingersFinish; j++) {
+        //     var  diff = Math.abs(obj.pointables[j].tipPosition[0] - FINGER_X_LOC[i]);
+        //     if( diff <= DELTA_FINGER_X_LOC && fingers_present[i] ===0 ){
+        //         fingers_present[i] = 1;
+        //         break;
+        //     }
+        //   }
+        // }     
+
+        console.log('Fingers present: ' + fingers_present);
+
+        // POST: [0, 1, 1, 0, 0]
+
+        // var characterData = { 
+        //    start_num_fingers: numFingersStart,
+        //    end_num_fingers: numFingersFinish
+        // }
+        // socket.emit('undetected-character-sent', characterData);
+        DELAY = 0;
+        STANDARD_POS = 0;
+      }
+    }
+
+
+  };
+  
+  // On socket close
+  ws.onclose = function(event) {
+    ws = null;
+    document.getElementById("main").style.visibility = "hidden";
+    document.getElementById("connection").innerHTML = "WebSocket connection closed";
+  }
+  
+  //On socket error
+  ws.onerror = function(event) {
+    alert("Received error");
+  };
+}
+</script>
+</head>
+<body onload="init();">
+<h1>Leap JavaScript/WebSocket Sample</h1>
+<div id="connection">WebSocket not connected</div>
+<div id="main" style="visibility:hidden">
+  <p>JSON Frame data:</p>
+  <div id="status"></div>
+  <div id="sort"></div>
+  <div id="fingers"></div>
+  <div id="output"></div>
+</div>
+</body>
+</html>
