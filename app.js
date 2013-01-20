@@ -6,6 +6,8 @@ var express = require('express')
 	, http = require('http');
 var routes = require('./routes');
 
+var CONSTANTS = require('constants.js');
+
 
 //Port Number set up
 process.env.NODE_ENV = 'development';
@@ -38,7 +40,9 @@ var async = require('async');
 var mongoose = require('mongoose'),
 	connect = require('connect'),
 	MongoStore = require('connect-mongodb');
-var my_db = 'mongodb://nodejitsu_socialsign:1f4qmdssgdm4dnhscproqqkc8b@ds043927.mongolab.com:43927/nodejitsu_socialsign_nodejitsudb8876918957';
+var my_db = CONSTANTS.mongo_db;
+
+//'mongodb://nodejitsu_socialsign:1f4qmdssgdm4dnhscproqqkc8b@ds043927.mongolab.com:43927/nodejitsu_socialsign_nodejitsudb8876918957';
 //Local Debugging
 //var my_db = 'mongodb://localhost/test';
 var db = mongoose.connect(my_db);
