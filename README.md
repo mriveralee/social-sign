@@ -8,3 +8,10 @@ In a standard chat room fashion, the interface permits written communication but
 
 
 Built using Node, MongoDB, Socket.io, Three.js, WebGL.
+
+
+=========
+Author:
+- Michael Rivera - http://www.mikeriv.com
+- Nicholas McGill - http://www.nmcgill.com
+- Natalie Gravier - http://www.nataliegravier.com
