@@ -490,3 +490,50 @@ font-weight: bold;
 .says {
     color:#06C1B8;
 }
+
+
+
+
+#how-it-works{margin:0px 43px; padding-top:90px;}
+#how-it-works h1{float:left;}
+#how-it-works #top-social{float:right; padding-top:62px;}
+#how-it-works #top-social li{float:left; list-style:none; margin-left:10px;}
+#how-it-works #top-social .facebook{
+    text-indent:-9999px; 
+    display:block; 
+    width:26px; 
+    height:26px; 
+    background:url(../images/sm-facebook-icon.png) no-repeat;
+}
+#how-it-works #top-social .twitter{
+    text-indent:-9999px; 
+    display:block; 
+    width:31px; 
+    height:24px; 
+    background:url(../images/sm-twitter-icon.png) no-repeat;
+}
+#how-it-works #top-social .linkedin{
+    text-indent:-9999px; 
+    display:block; 
+    width:26px; 
+    height:26px; 
+    background:url(../images/sm-linkedin-icon.png) no-repeat;
+}
+#how-it-works .content{overflow:auto;}
+#how-it-works .content .neutral-description img{}
+#how-it-works .content .neutral-description{margin-right:40px;font-weight: bold;text-align:center; font-size: 24;float:left; border:5px solid #222222;}
+
+#how-it-works .content #service-icons{margin-top:20px;}
+#how-it-works .content #service-icons li{
+    display:block;
+    width:108px;
+    height:108px;
+    text-indent:-9999px;
+    list-style:none;
+    float:left;
+    margin-right:20px;
+}
+
+
+
+
