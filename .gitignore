@@ -9,6 +9,7 @@ lib-cov
 node_modules
 *.gitignore
 constants.js
+*.DS_Store
 
 pids
 logs
