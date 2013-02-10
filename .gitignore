@@ -8,6 +8,7 @@ lib-cov
 *.gz
 node_modules
 *.gitignore
+constants.js
 
 pids
 logs
